@@ -8,7 +8,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 ## 🏗️ FASE 0: Preparación del Entorno
 **Objetivo:** Tener el proyecto base listo para desarrollar.
 
-1.  **Inicialización:** Crear proyecto con `Vite + React`.
+1. ~~ **Inicialización:** Crear proyecto con `Vite + React`.~~
 2.  **Limpieza:** Eliminar archivos de ejemplo (`App.css`, `assets`, etc.).
 3.  **Estructura de Carpetas:**
     ```bash
