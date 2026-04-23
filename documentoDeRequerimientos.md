@@ -48,7 +48,7 @@ Cada actividad pertenece a una categoría.
 ### Funcionalidades:
 - Promedio visible por estudiante  
 - Estado del estudiante:
-  - Pierde (<3.0)
+  - Pierde (< 3.0)
   - Riesgo
   - Aprueba  
 
@@ -106,4 +106,29 @@ Cada actividad pertenece a una categoría.
 {
   id: 1,
   nombre: "Juan"
+}```
+
+## Actividad 
+{
+  id: 1,
+  nombre: "Parcial 1",
+  categoria: "Parciales",
+  fecha: "2026-04-22"
 }
+
+## Nota
+{
+  estudianteId: 1,
+  actividadId: 1,
+  valor: 4.5
+}
+## Categoría
+{
+  nombre: "Parciales",
+  porcentaje: 40
+}
+## Enfoque clave
+
+Empezar con una versión simple, funcional y sin dependencias externas.
+Validar con docentes reales.
+Escalar progresivamente agregando backend y funcionalidades avanzadas.
