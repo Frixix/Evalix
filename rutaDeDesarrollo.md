@@ -9,7 +9,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 **Objetivo:** Tener el proyecto base listo para desarrollar.
 
 1. ~~ **Inicialización:** Crear proyecto con `Vite + React`.~~
-2.  **Limpieza:** Eliminar archivos de ejemplo (`App.css`, `assets`, etc.).
+2.  ~~ **Limpieza:** Eliminar archivos de ejemplo (`App.css`, `assets`, etc.).~~ 
 3.  **Estructura de Carpetas:**
     ```bash
     src/
@@ -19,7 +19,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
       utils/      # Funciones de cálculo matemático
       App.jsx
     ```
-4.  **Verificación:** Ejecutar `npm run dev` y confirmar que el entorno corre.
+4.  ~~  **Verificación:** Ejecutar `npm run dev` y confirmar que el entorno corre.~~ 
 
 ---
 
