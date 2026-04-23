@@ -21,7 +21,8 @@ Permitir a docentes registrar, calcular y visualizar notas de forma automática,
 - Agregar estudiantes manualmente  
 - Crear actividades (Ej: Taller 1, Parcial, Quiz)  
 - Ingresar notas en tabla tipo Excel  
-
+- **Importación Rápida:** Carga de estudiantes manual o mediante archivo CSV.
+- **Grilla Interactiva:** Ingreso de notas en tabla con navegación por teclado (tipo Excel).
 ### Filtros:
 - Buscar estudiante por nombre  
 - Filtrar actividades por fecha  
@@ -50,7 +51,12 @@ Cada actividad pertenece a una categoría.
 - Estado del estudiante:
   - Pierde (< 3.0)
   - Riesgo
-  - Aprueba  
+  - Aprueba 
+
+  * **Semáforo de Rendimiento:**
+    * 🔴 **Pierde:** < 3.0
+    * 🟡 **Riesgo:** 3.0 - 3.4
+    * 🟢 **Aprueba:** > 3.5 
 
 - Indicadores visuales por color en la tabla  
 
@@ -106,29 +112,38 @@ Cada actividad pertenece a una categoría.
 {
   id: 1,
   nombre: "Juan"
-}```
-
+}
+```
 ## Actividad 
+``` js 
 {
   id: 1,
   nombre: "Parcial 1",
   categoria: "Parciales",
   fecha: "2026-04-22"
 }
-
+```
 ## Nota
+```js
 {
   estudianteId: 1,
   actividadId: 1,
   valor: 4.5
 }
+```
 ## Categoría
+```js
 {
   nombre: "Parciales",
   porcentaje: 40
 }
+```
 ## Enfoque clave
 
 Empezar con una versión simple, funcional y sin dependencias externas.
 Validar con docentes reales.
 Escalar progresivamente agregando backend y funcionalidades avanzadas.
+
+### Hoja de Ruta
+1.  **V1 (Actual):** Funcionamiento 100% local, enfoque en UX y cálculos precisos.
+2.  **V2:** Autenticación de docentes, base de datos en línea y acceso para estudiantes.
