@@ -4,12 +4,15 @@ import "../styles/tabla.css";
 
 function TablaNotas() {
   // ================================
-  // CONFIGURACIÓN
+  // CONFIGURACIÓN GLOBAL (DOCENTE)
   // ================================
-  const escala = {
-    min: 0,
-    max: 5,
-    step: 0.1
+  const config = {
+    escala: {
+      min: 0,
+      max: 5,
+      step: 0.1
+    },
+    redondeo: 2
   };
 
   // ================================
@@ -17,57 +20,64 @@ function TablaNotas() {
   // ================================
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
 
+  const [actividades, setActividades] = useState([
+    {
+      id: 1,
+      nombre: "Actividad 1",
+      fechaCreacion: new Date().toISOString()
+    },
+    {
+      id: 2,
+      nombre: "Actividad 2",
+      fechaCreacion: new Date().toISOString()
+    }
+  ]);
+
   // ================================
-  // FUNCIONES AUXILIARES
+  // PROMEDIO CORREGIDO
   // ================================
+    const calcularPromedio = (notas, actividades = []) => {
+    let suma = 0;
 
-  // Calcula promedio de un objeto de notas
-  const calcularPromedio = (notas) => {
-    const valores = Object.values(notas)
-      .map((n) => Number(n))
-      .filter((n) => !isNaN(n));
+    actividades.forEach((act) => {
+      const valor = Number(notas?.[act.id]);
 
-    if (valores.length === 0) return 0;
+      if (!isNaN(valor)) {
+        suma += valor;
+      }
+    });
 
-    const suma = valores.reduce((acc, n) => acc + n, 0);
-    return suma / valores.length;
+    const total = actividades.length;
+
+    if (total === 0) return 0;
+
+    return suma / total;
   };
 
-  // Determina el estado visual del estudiante
+  // ================================
+  // ESTADO VISUAL
+  // ================================
   const obtenerEstado = (promedio, notas) => {
     const valores = Object.values(notas).filter((n) => n !== "");
 
     if (valores.length === 0) {
-      return {
-        texto: "Sin datos",
-        clase: "estado-neutral"
-      };
+      return { texto: "Sin datos", clase: "estado-neutral" };
     }
 
     if (promedio < 3) {
-      return {
-        texto: "Pierde",
-        clase: "estado-pierde"
-      };
+      return { texto: "Pierde", clase: "estado-pierde" };
     }
 
     if (promedio < 3.5) {
-      return {
-        texto: "Riesgo",
-        clase: "estado-riesgo"
-      };
+      return { texto: "Riesgo", clase: "estado-riesgo" };
     }
 
-    return {
-      texto: "Aprueba",
-      clase: "estado-aprueba"
-    };
+    return { texto: "Aprueba", clase: "estado-aprueba" };
   };
 
   // ================================
-  // ACTUALIZACIÓN DE ESTADO
+  // ACTUALIZAR NOTAS
   // ================================
-
   const actualizarEstado = (id, actividad, valor) => {
     const nuevosEstudiantes = estudiantes.map((est) => {
       if (est.id === id) {
@@ -79,14 +89,12 @@ function TablaNotas() {
           }
         };
       }
-
       return est;
     });
 
     setEstudiantes(nuevosEstudiantes);
   };
 
-  // Manejo de cambios en inputs
   const handleNotaChange = (id, actividad, valor) => {
     if (valor === "") {
       actualizarEstado(id, actividad, "");
@@ -97,9 +105,38 @@ function TablaNotas() {
 
     if (isNaN(numero)) return;
 
-    if (numero < escala.min || numero > escala.max) return;
+    if (
+      numero < config.escala.min ||
+      numero > config.escala.max
+    )
+      return;
 
     actualizarEstado(id, actividad, numero);
+  };
+
+  // ================================
+  // AGREGAR ACTIVIDAD
+  // ================================
+  const agregarActividad = () => {
+    const nuevaActividad = {
+      id: Date.now(),
+      nombre: `Actividad ${actividades.length + 1}`,
+      fechaCreacion: new Date().toISOString()
+    };
+
+    setActividades([...actividades, nuevaActividad]);
+
+    const estudiantesActualizados = estudiantes.map((est) => {
+      return {
+        ...est,
+        notas: {
+          ...est.notas,
+          [nuevaActividad.id]: ""
+        }
+      };
+    });
+
+    setEstudiantes(estudiantesActualizados);
   };
 
   // ================================
@@ -109,12 +146,20 @@ function TablaNotas() {
     <div className="tabla-container">
       <h2 className="tabla-titulo">Tabla de Notas</h2>
 
+      {/* BOTÓN */}
+      <button onClick={agregarActividad}>
+        Agregar actividad
+      </button>
+
       <table className="tabla">
         <thead>
           <tr>
             <th>Estudiante</th>
-            <th>Actividad 1</th>
-            <th>Actividad 2</th>
+
+            {actividades.map((act) => (
+              <th key={act.id}>{act.nombre}</th>
+            ))}
+
             <th>Promedio</th>
             <th>Estado</th>
           </tr>
@@ -122,55 +167,34 @@ function TablaNotas() {
 
         <tbody>
           {estudiantes.map((est) => {
-            // ================================
-            // VARIABLES DE CADA FILA
-            // ================================
-
-            const promedio = calcularPromedio(est.notas);
-
+            const promedio = calcularPromedio(est.notas, actividades);
             const estado = obtenerEstado(promedio, est.notas);
 
             return (
               <tr key={est.id}>
                 <td>{est.nombre}</td>
 
-                <td>
-                  <input
-                    className="input-nota"
-                    type="number"
-                    min={escala.min}
-                    max={escala.max}
-                    step={escala.step}
-                    value={est.notas.actividad1}
-                    onChange={(e) =>
-                      handleNotaChange(
-                        est.id,
-                        "actividad1",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
+                {actividades.map((act) => (
+                  <td key={act.id}>
+                    <input
+                      className="input-nota"
+                      type="number"
+                      min={config.escala.min}
+                      max={config.escala.max}
+                      step={config.escala.step}
+                      value={est.notas[act.id] || ""}
+                      onChange={(e) =>
+                        handleNotaChange(
+                          est.id,
+                          act.id,
+                          e.target.value
+                        )
+                      }
+                    />
+                  </td>
+                ))}
 
-                <td>
-                  <input
-                    className="input-nota"
-                    type="number"
-                    min={escala.min}
-                    max={escala.max}
-                    step={escala.step}
-                    value={est.notas.actividad2}
-                    onChange={(e) =>
-                      handleNotaChange(
-                        est.id,
-                        "actividad2",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-
-                <td>{promedio.toFixed(2)}</td>
+                <td>{promedio.toFixed(config.redondeo)}</td>
 
                 <td>
                   <span className={`badge ${estado.clase}`}>
