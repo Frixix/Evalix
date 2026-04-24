@@ -34,6 +34,13 @@ function TablaNotas() {
   ]);
 
   // ================================
+  // NOMBRE DE LA ACTIVIDAD
+  // ================================
+
+  const [nombreActividad, setNombreActividad] = useState("");
+
+
+  // ================================
   // PROMEDIO CORREGIDO
   // ================================
     const calcularPromedio = (notas, actividades = []) => {
@@ -118,25 +125,27 @@ function TablaNotas() {
   // AGREGAR ACTIVIDAD
   // ================================
   const agregarActividad = () => {
+    if (!nombreActividad.trim()) return;
+
     const nuevaActividad = {
       id: Date.now(),
-      nombre: `Actividad ${actividades.length + 1}`,
+      nombre: nombreActividad,
       fechaCreacion: new Date().toISOString()
     };
 
     setActividades([...actividades, nuevaActividad]);
 
-    const estudiantesActualizados = estudiantes.map((est) => {
-      return {
-        ...est,
-        notas: {
-          ...est.notas,
-          [nuevaActividad.id]: ""
-        }
-      };
-    });
+    const estudiantesActualizados = estudiantes.map((est) => ({
+      ...est,
+      notas: {
+        ...est.notas,
+        [nuevaActividad.id]: ""
+      }
+    }));
 
     setEstudiantes(estudiantesActualizados);
+
+    setNombreActividad("");
   };
 
   // ================================
@@ -147,6 +156,12 @@ function TablaNotas() {
       <h2 className="tabla-titulo">Tabla de Notas</h2>
 
       {/* BOTÓN */}
+            <input
+        type="text"
+        placeholder="Nombre de la actividad"
+        value={nombreActividad}
+        onChange={(e) => setNombreActividad(e.target.value)}
+      />
       <button onClick={agregarActividad}>
         Agregar actividad
       </button>
