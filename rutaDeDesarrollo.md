@@ -21,22 +21,22 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
     ```
 4.  ~~  **Verificación:** Ejecutar `npm run dev` y confirmar que el entorno corre.~~ 
 
----
 
+---
 ## 🦴 FASE 1: Estructura Base (Skeleton)
 **Objetivo:** Interfaz visual inicial sin lógica compleja.
 
-1.  **Layout:** Crear el contenedor principal de la aplicación.
-2.  **Tabla Base:** Diseñar una tabla tipo Excel (Filas = Estudiantes, Columnas = Actividades).
-3.  **Mock Data:** Crear un archivo de prueba:
+1.  ~~ **Layout:** Crear el contenedor principal de la aplicación.~~
+2.  ~~**Tabla Base:** Diseñar una tabla tipo Excel (Filas = Estudiantes, Columnas = Actividades).
+3.  ~~**Mock Data:** Crear un archivo de prueba:~~
     ```javascript
     const estudiantes = [
       { id: 1, nombre: "Juan Rodríguez" },
       { id: 2, nombre: "María Casallas" }
     ];
     ```
-4.  **Renderizado:** Mapear los datos estáticos en la tabla.
-5.  **Inputs:** Colocar campos de texto para las notas (solo visual).
+4.  ~~**Renderizado:** Mapear los datos estáticos en la tabla.~~
+5. ~~ **Inputs:** Colocar campos de texto para las notas (solo visual).~~
 
 ---
 
