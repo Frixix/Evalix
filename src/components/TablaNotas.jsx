@@ -9,8 +9,10 @@ function TablaNotas() {
     max: 5,
     step: 0.1
   };
+
   // Estado principal 
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
+
 
   const calcularPromedio = (notas) => {
     const valores = Object.values(notas)
@@ -22,7 +24,7 @@ function TablaNotas() {
     const suma = valores.reduce((acc, n) => acc + n, 0);
     return suma / valores.length;
   };
-
+  
   // validación real 
     const handleNotaChange = (id, actividad, valor) => {
 
@@ -58,6 +60,29 @@ function TablaNotas() {
 
       setEstudiantes(nuevosEstudiantes);
     };
+    const obtenerEstado = (promedio) => {
+  if (promedio < 3) {
+    return {
+      texto: "Pierde",
+      color: "#fdecea",   // rojo suave
+      textoColor: "#b71c1c"
+    };
+  }
+
+    if (promedio < 3.5) {
+      return {
+        texto: "Riesgo",
+        color: "#fff8e1",   // amarillo suave
+        textoColor: "#f57f17"
+      };
+    }
+
+    return {
+      texto: "Aprueba",
+      color: "#e8f5e9",   // verde suave
+      textoColor: "#1b5e20"
+    };
+  };
     
   return (
     <div>
@@ -74,37 +99,60 @@ function TablaNotas() {
         </thead>
 
         <tbody>
-          {estudiantes.map((est) => (
-            <tr key={est.id}>
-              <td>{est.nombre}</td>
+          {estudiantes.map((est) => {
+            const promedio = calcularPromedio(est.notas);
+            const estado = obtenerEstado(promedio);
 
-              <td>
-                <input
-                  type="number"
-                  min={escala.min}
-                  max={escala.max}
-                  step={escala.step}
-                  value={est.notas.actividad1}
-                  onChange={(e) =>
-                    handleNotaChange(est.id, "actividad1", e.target.value)
-                  }
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  min={escala.min}
-                  max={escala.max}
-                  step={escala.step}
-                  value={est.notas.actividad2}
-                  onChange={(e) =>
-                    handleNotaChange(est.id, "actividad2", e.target.value)
-                  }
-                />
-              </td>
-              <td>{calcularPromedio(est.notas).toFixed(2)}</td>
-            </tr>
-          ))}
+            return (
+              <tr key={est.id}>
+                <td>{est.nombre}</td>
+
+                <td>
+                  <input
+                    type="number"
+                    min={escala.min}
+                    max={escala.max}
+                    step={escala.step}
+                    value={est.notas.actividad1}
+                    onChange={(e) =>
+                      handleNotaChange(est.id, "actividad1", e.target.value)
+                    }
+                  />
+                </td>
+
+                <td>
+                  <input
+                    type="number"
+                    min={escala.min}
+                    max={escala.max}
+                    step={escala.step}
+                    value={est.notas.actividad2}
+                    onChange={(e) =>
+                      handleNotaChange(est.id, "actividad2", e.target.value)
+                    }
+                  />
+                </td>
+
+                <td>{promedio.toFixed(2)}</td>
+
+                {/* 🎨 Estado visual */}
+                <td>
+                  <span
+                    style={{
+                      backgroundColor: estado.color,
+                      color: estado.textoColor,
+                      padding: "4px 10px",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                      fontWeight: "600"
+                    }}
+                  >
+                    {estado.texto}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
