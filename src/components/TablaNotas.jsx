@@ -1,19 +1,27 @@
-import { estudiantesMock } from "../data/estudiantes";
 import { useState } from "react";
+import { estudiantesMock } from "../data/estudiantes";
+import "../styles/tabla.css";
 
 function TablaNotas() {
-
-  // Configuración de la escala de notas
+  // ================================
+  // CONFIGURACIÓN
+  // ================================
   const escala = {
     min: 0,
     max: 5,
     step: 0.1
   };
 
-  // Estado principal 
+  // ================================
+  // ESTADO PRINCIPAL
+  // ================================
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
 
+  // ================================
+  // FUNCIONES AUXILIARES
+  // ================================
 
+  // Calcula promedio de un objeto de notas
   const calcularPromedio = (notas) => {
     const valores = Object.values(notas)
       .map((n) => Number(n))
@@ -24,84 +32,103 @@ function TablaNotas() {
     const suma = valores.reduce((acc, n) => acc + n, 0);
     return suma / valores.length;
   };
-  
-  // validación real 
-    const handleNotaChange = (id, actividad, valor) => {
 
-      // 🔹 Permitir vacío directamente
-      if (valor === "") {
-        actualizarEstado(id, actividad, "");
-        return;
-      }
+  // Determina el estado visual del estudiante
+  const obtenerEstado = (promedio, notas) => {
+    const valores = Object.values(notas).filter((n) => n !== "");
 
-      const numero = Number(valor);
+    if (valores.length === 0) {
+      return {
+        texto: "Sin datos",
+        clase: "estado-neutral"
+      };
+    }
 
-      // 🔹 Evitar NaN
-      if (isNaN(numero)) return;
-
-      // 🔹 Validar rango
-      if (numero < escala.min || numero > escala.max) return;
-
-      actualizarEstado(id, actividad, numero);
-    };
-    const actualizarEstado = (id, actividad, valor) => {
-      const nuevosEstudiantes = estudiantes.map((est) => {
-        if (est.id === id) {
-          return {
-            ...est,
-            notas: {
-              ...est.notas,
-              [actividad]: valor
-            }
-          };
-        }
-        return est;
-      });
-
-      setEstudiantes(nuevosEstudiantes);
-    };
-    const obtenerEstado = (promedio) => {
-  if (promedio < 3) {
-    return {
-      texto: "Pierde",
-      color: "#fdecea",   // rojo suave
-      textoColor: "#b71c1c"
-    };
-  }
+    if (promedio < 3) {
+      return {
+        texto: "Pierde",
+        clase: "estado-pierde"
+      };
+    }
 
     if (promedio < 3.5) {
       return {
         texto: "Riesgo",
-        color: "#fff8e1",   // amarillo suave
-        textoColor: "#f57f17"
+        clase: "estado-riesgo"
       };
     }
 
     return {
       texto: "Aprueba",
-      color: "#e8f5e9",   // verde suave
-      textoColor: "#1b5e20"
+      clase: "estado-aprueba"
     };
   };
-    
-  return (
-    <div>
-      <h2>Tabla de Notas</h2>
 
-      <table border="1" cellPadding="10">
+  // ================================
+  // ACTUALIZACIÓN DE ESTADO
+  // ================================
+
+  const actualizarEstado = (id, actividad, valor) => {
+    const nuevosEstudiantes = estudiantes.map((est) => {
+      if (est.id === id) {
+        return {
+          ...est,
+          notas: {
+            ...est.notas,
+            [actividad]: valor
+          }
+        };
+      }
+
+      return est;
+    });
+
+    setEstudiantes(nuevosEstudiantes);
+  };
+
+  // Manejo de cambios en inputs
+  const handleNotaChange = (id, actividad, valor) => {
+    if (valor === "") {
+      actualizarEstado(id, actividad, "");
+      return;
+    }
+
+    const numero = Number(valor);
+
+    if (isNaN(numero)) return;
+
+    if (numero < escala.min || numero > escala.max) return;
+
+    actualizarEstado(id, actividad, numero);
+  };
+
+  // ================================
+  // RENDER
+  // ================================
+  return (
+    <div className="tabla-container">
+      <h2 className="tabla-titulo">Tabla de Notas</h2>
+
+      <table className="tabla">
         <thead>
           <tr>
             <th>Estudiante</th>
             <th>Actividad 1</th>
             <th>Actividad 2</th>
             <th>Promedio</th>
+            <th>Estado</th>
           </tr>
         </thead>
 
         <tbody>
           {estudiantes.map((est) => {
+            // ================================
+            // VARIABLES DE CADA FILA
+            // ================================
+
             const promedio = calcularPromedio(est.notas);
-            const estado = obtenerEstado(promedio);
+
+            const estado = obtenerEstado(promedio, est.notas);
 
             return (
               <tr key={est.id}>
@@ -109,44 +136,44 @@ function TablaNotas() {
 
                 <td>
                   <input
+                    className="input-nota"
                     type="number"
                     min={escala.min}
                     max={escala.max}
                     step={escala.step}
                     value={est.notas.actividad1}
                     onChange={(e) =>
-                      handleNotaChange(est.id, "actividad1", e.target.value)
+                      handleNotaChange(
+                        est.id,
+                        "actividad1",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
 
                 <td>
                   <input
+                    className="input-nota"
                     type="number"
                     min={escala.min}
                     max={escala.max}
                     step={escala.step}
                     value={est.notas.actividad2}
                     onChange={(e) =>
-                      handleNotaChange(est.id, "actividad2", e.target.value)
+                      handleNotaChange(
+                        est.id,
+                        "actividad2",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
 
                 <td>{promedio.toFixed(2)}</td>
 
-                {/* 🎨 Estado visual */}
                 <td>
-                  <span
-                    style={{
-                      backgroundColor: estado.color,
-                      color: estado.textoColor,
-                      padding: "4px 10px",
-                      borderRadius: "8px",
-                      fontSize: "12px",
-                      fontWeight: "600"
-                    }}
-                  >
+                  <span className={`badge ${estado.clase}`}>
                     {estado.texto}
                   </span>
                 </td>
@@ -155,7 +182,6 @@ function TablaNotas() {
           })}
         </tbody>
       </table>
-
     </div>
   );
 }
