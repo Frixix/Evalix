@@ -99,3 +99,21 @@
 .fila-pierde {
   background-color: #fef5f5;
 }
+
+.btn-eliminar {
+  margin-top: 6px;
+  border: none;
+  background: #ff4d4f;
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background: #d9363e;
+  transform: scale(1.08);
+}

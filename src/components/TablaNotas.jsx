@@ -155,6 +155,32 @@ function TablaNotas() {
     setNombreActividad("");
     setFechaActividad(hoy);
   };
+  // ================================
+  // ELIMINAR ACTIVIDAD
+  // ================================
+
+    const eliminarActividad = (actividadId) => {
+    // 1. Quitar actividad del array
+    const nuevasActividades = actividades.filter(
+      (act) => act.id !== actividadId
+    );
+
+    setActividades(nuevasActividades);
+
+    // 2. Quitar nota asociada en cada estudiante
+    const estudiantesActualizados = estudiantes.map((est) => {
+      const nuevasNotas = { ...est.notas };
+
+      delete nuevasNotas[actividadId];
+
+      return {
+        ...est,
+        notas: nuevasNotas
+      };
+    });
+
+    setEstudiantes(estudiantesActualizados);
+  };
 
   // ================================
   // RENDER
@@ -185,12 +211,21 @@ function TablaNotas() {
           <tr>
             <th>Estudiante</th>
 
-            {actividades.map((act) => (
-              <th key={act.id}>
-                <div>{act.nombre}</div>
-                <small>{act.fechaCreacion}</small>
-              </th>
-            ))}
+        {actividades.map((act) => (
+          <th key={act.id}>
+            <div>{act.nombre}</div>
+            <small>{act.fechaCreacion}</small>
+
+            <button
+              onClick={() => eliminarActividad(act.id)}
+              className="btn-eliminar"
+            >
+              ×
+            </button>
+          </th>
+        ))}
+
+            
 
             <th>Promedio</th>
             <th>Estado</th>
