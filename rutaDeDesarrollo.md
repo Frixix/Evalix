@@ -40,7 +40,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 
 ---
 
-## 🧠 FASE 2: Manejo de Estado
+## 🧠 ~~  FASE 2: Manejo de Estado~~ 
 **Objetivo:** Hacer que la aplicación "recuerde" los cambios.
 
 1.  **Estado Global:** Implementar `useState` para manejar la lista de estudiantes y sus notas.
@@ -49,7 +49,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 
 ---
 
-## 🔢 FASE 3: Lógica de Cálculo
+## 🔢 ~~ FASE 3: Lógica de Cálculo~~ 
 **Objetivo:** Automatizar la matemática del docente.
 
 1.  **Funciones Utilitarias:** Crear `calcularPromedio(notas)`.
@@ -59,7 +59,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 
 ---
 
-## 🎨 FASE 4: Vista Clara (UX/UI)
+## 🎨 ~~ FASE 4: Vista Clara (UX/UI)~~ 
 **Objetivo:** Que la información sea fácil de leer de un vistazo.
 
 1.  **Indicadores de Estado:**

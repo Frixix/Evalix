@@ -16,6 +16,12 @@ function TablaNotas() {
   };
 
   // ================================
+  // FORMULARIO DE NUEVA ACTIVIDAD
+  // ================================
+  const [nombreActividad, setNombreActividad] = useState("");
+  const [fechaActividad, setFechaActividad] = useState("");
+
+  // ================================
   // ESTADO PRINCIPAL
   // ================================
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
@@ -24,26 +30,19 @@ function TablaNotas() {
     {
       id: 1,
       nombre: "Actividad 1",
-      fechaCreacion: new Date().toISOString()
+      fechaCreacion: new Date().toISOString().split("T")[0]
     },
     {
       id: 2,
       nombre: "Actividad 2",
-      fechaCreacion: new Date().toISOString()
+      fechaCreacion: new Date().toISOString().split("T")[0]
     }
   ]);
 
   // ================================
-  // NOMBRE DE LA ACTIVIDAD
+  // PROMEDIO
   // ================================
-
-  const [nombreActividad, setNombreActividad] = useState("");
-
-
-  // ================================
-  // PROMEDIO CORREGIDO
-  // ================================
-    const calcularPromedio = (notas, actividades = []) => {
+  const calcularPromedio = (notas, actividades = []) => {
     let suma = 0;
 
     actividades.forEach((act) => {
@@ -54,11 +53,9 @@ function TablaNotas() {
       }
     });
 
-    const total = actividades.length;
+    if (actividades.length === 0) return 0;
 
-    if (total === 0) return 0;
-
-    return suma / total;
+    return suma / actividades.length;
   };
 
   // ================================
@@ -96,6 +93,7 @@ function TablaNotas() {
           }
         };
       }
+
       return est;
     });
 
@@ -115,8 +113,9 @@ function TablaNotas() {
     if (
       numero < config.escala.min ||
       numero > config.escala.max
-    )
+    ) {
       return;
+    }
 
     actualizarEstado(id, actividad, numero);
   };
@@ -125,12 +124,12 @@ function TablaNotas() {
   // AGREGAR ACTIVIDAD
   // ================================
   const agregarActividad = () => {
-    if (!nombreActividad.trim()) return;
+    if (!nombreActividad.trim() || !fechaActividad) return;
 
     const nuevaActividad = {
       id: Date.now(),
       nombre: nombreActividad,
-      fechaCreacion: new Date().toISOString()
+      fechaCreacion: fechaActividad
     };
 
     setActividades([...actividades, nuevaActividad]);
@@ -146,6 +145,7 @@ function TablaNotas() {
     setEstudiantes(estudiantesActualizados);
 
     setNombreActividad("");
+    setFechaActividad("");
   };
 
   // ================================
@@ -155,16 +155,29 @@ function TablaNotas() {
     <div className="tabla-container">
       <h2 className="tabla-titulo">Tabla de Notas</h2>
 
-      {/* BOTÓN */}
-            <input
-        type="text"
-        placeholder="Nombre de la actividad"
-        value={nombreActividad}
-        onChange={(e) => setNombreActividad(e.target.value)}
-      />
-      <button onClick={agregarActividad}>
-        Agregar actividad
-      </button>
+      {/* FORMULARIO NUEVA ACTIVIDAD */}
+      <div className="actividad-form">
+        <input
+          type="text"
+          placeholder="Nombre de la actividad"
+          value={nombreActividad}
+          onChange={(e) =>
+            setNombreActividad(e.target.value)
+          }
+        />
+
+        <input
+          type="date"
+          value={fechaActividad}
+          onChange={(e) =>
+            setFechaActividad(e.target.value)
+          }
+        />
+
+        <button onClick={agregarActividad}>
+          Agregar actividad
+        </button>
+      </div>
 
       <table className="tabla">
         <thead>
@@ -182,8 +195,15 @@ function TablaNotas() {
 
         <tbody>
           {estudiantes.map((est) => {
-            const promedio = calcularPromedio(est.notas, actividades);
-            const estado = obtenerEstado(promedio, est.notas);
+            const promedio = calcularPromedio(
+              est.notas,
+              actividades
+            );
+
+            const estado = obtenerEstado(
+              promedio,
+              est.notas
+            );
 
             return (
               <tr key={est.id}>
