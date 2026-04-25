@@ -4,7 +4,7 @@ import "../styles/tabla.css";
 
 function TablaNotas() {
   // ================================
-  // CONFIGURACIÓN GLOBAL (DOCENTE)
+  // CONFIGURACIÓN GLOBAL
   // ================================
   const config = {
     escala: {
@@ -16,26 +16,28 @@ function TablaNotas() {
   };
 
   // ================================
-  // FORMULARIO DE NUEVA ACTIVIDAD
+  // FECHA HOY AUTOMÁTICA
   // ================================
-  const [nombreActividad, setNombreActividad] = useState("");
-  const [fechaActividad, setFechaActividad] = useState("");
+  const hoy = new Date().toISOString().split("T")[0];
 
   // ================================
-  // ESTADO PRINCIPAL
+  // ESTADOS PRINCIPALES
   // ================================
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
+
+  const [nombreActividad, setNombreActividad] = useState("");
+  const [fechaActividad, setFechaActividad] = useState(hoy);
 
   const [actividades, setActividades] = useState([
     {
       id: 1,
       nombre: "Actividad 1",
-      fechaCreacion: new Date().toISOString().split("T")[0]
+      fechaCreacion: hoy
     },
     {
       id: 2,
       nombre: "Actividad 2",
-      fechaCreacion: new Date().toISOString().split("T")[0]
+      fechaCreacion: hoy
     }
   ]);
 
@@ -44,18 +46,24 @@ function TablaNotas() {
   // ================================
   const calcularPromedio = (notas, actividades = []) => {
     let suma = 0;
+    let totalNotasValidas = 0;
 
     actividades.forEach((act) => {
-      const valor = Number(notas?.[act.id]);
+      const valor = notas?.[act.id];
 
-      if (!isNaN(valor)) {
-        suma += valor;
+      if (valor !== "" && valor !== undefined) {
+        const numero = Number(valor);
+
+        if (!isNaN(numero)) {
+          suma += numero;
+          totalNotasValidas++;
+        }
       }
     });
 
-    if (actividades.length === 0) return 0;
+    if (totalNotasValidas === 0) return 0;
 
-    return suma / actividades.length;
+    return suma / totalNotasValidas;
   };
 
   // ================================
@@ -80,7 +88,7 @@ function TablaNotas() {
   };
 
   // ================================
-  // ACTUALIZAR NOTAS
+  // ACTUALIZAR NOTA
   // ================================
   const actualizarEstado = (id, actividad, valor) => {
     const nuevosEstudiantes = estudiantes.map((est) => {
@@ -124,7 +132,7 @@ function TablaNotas() {
   // AGREGAR ACTIVIDAD
   // ================================
   const agregarActividad = () => {
-    if (!nombreActividad.trim() || !fechaActividad) return;
+    if (!nombreActividad.trim()) return;
 
     const nuevaActividad = {
       id: Date.now(),
@@ -145,7 +153,7 @@ function TablaNotas() {
     setEstudiantes(estudiantesActualizados);
 
     setNombreActividad("");
-    setFechaActividad("");
+    setFechaActividad(hoy);
   };
 
   // ================================
@@ -155,29 +163,22 @@ function TablaNotas() {
     <div className="tabla-container">
       <h2 className="tabla-titulo">Tabla de Notas</h2>
 
-      {/* FORMULARIO NUEVA ACTIVIDAD */}
-      <div className="actividad-form">
-        <input
-          type="text"
-          placeholder="Nombre de la actividad"
-          value={nombreActividad}
-          onChange={(e) =>
-            setNombreActividad(e.target.value)
-          }
-        />
+      <input
+        type="text"
+        placeholder="Nombre de la actividad"
+        value={nombreActividad}
+        onChange={(e) => setNombreActividad(e.target.value)}
+      />
 
-        <input
-          type="date"
-          value={fechaActividad}
-          onChange={(e) =>
-            setFechaActividad(e.target.value)
-          }
-        />
+      <input
+        type="date"
+        value={fechaActividad}
+        onChange={(e) => setFechaActividad(e.target.value)}
+      />
 
-        <button onClick={agregarActividad}>
-          Agregar actividad
-        </button>
-      </div>
+      <button onClick={agregarActividad}>
+        Agregar actividad
+      </button>
 
       <table className="tabla">
         <thead>
@@ -185,7 +186,10 @@ function TablaNotas() {
             <th>Estudiante</th>
 
             {actividades.map((act) => (
-              <th key={act.id}>{act.nombre}</th>
+              <th key={act.id}>
+                <div>{act.nombre}</div>
+                <small>{act.fechaCreacion}</small>
+              </th>
             ))}
 
             <th>Promedio</th>
@@ -195,15 +199,8 @@ function TablaNotas() {
 
         <tbody>
           {estudiantes.map((est) => {
-            const promedio = calcularPromedio(
-              est.notas,
-              actividades
-            );
-
-            const estado = obtenerEstado(
-              promedio,
-              est.notas
-            );
+            const promedio = calcularPromedio(est.notas, actividades);
+            const estado = obtenerEstado(promedio, est.notas);
 
             return (
               <tr key={est.id}>
