@@ -167,24 +167,26 @@
 .btn-eliminar {
   margin-top: 8px;
   border: none;
-  background: #ef4444;
-  color: white;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
+  background: transparent;
+  color: #94a3b8;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
-  box-shadow:
-    0 4px 10px rgba(239, 68, 68, 0.25);
 }
 
 .btn-eliminar:hover {
-  background: #dc2626;
-  transform: scale(1.08);
+  background: #fee2e2;
+  color: #dc2626;
 }
 
+.btn-eliminar .material-symbols-outlined {
+  font-size: 20px;
+}
 /* ================================
    FECHA DE ACTIVIDAD
 ================================ */

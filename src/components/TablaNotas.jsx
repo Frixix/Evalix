@@ -2,6 +2,7 @@ import { useState } from "react";
 import { estudiantesMock } from "../data/estudiantes";
 import "../styles/tabla.css";
 
+
 function TablaNotas() {
   // ================================
   // CONFIGURACIÓN GLOBAL
@@ -218,10 +219,20 @@ function TablaNotas() {
               <small>{act.fechaCreacion}</small>
 
               <button
-                onClick={() => eliminarActividad(act.id)}
                 className="btn-eliminar"
-              >
-                ×
+                onClick={() => {
+                  const confirmar = window.confirm(
+                    `¿Eliminar "${act.nombre}"?\n\nEsta acción no se puede deshacer.`
+                  );
+
+                    if (confirmar) {
+                      eliminarActividad(act.id);
+                    }
+                  }}
+                >
+                <span className="material-symbols-outlined">
+                  delete
+                </span>
               </button>
             </th>
           ))}
