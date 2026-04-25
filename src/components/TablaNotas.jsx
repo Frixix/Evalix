@@ -206,73 +206,75 @@ function TablaNotas() {
         Agregar actividad
       </button>
 
-      <table className="tabla">
-        <thead>
-          <tr>
-            <th>Estudiante</th>
+      <div className="tabla-wrapper">
+        <table className="tabla">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
 
-        {actividades.map((act) => (
-          <th key={act.id}>
-            <div>{act.nombre}</div>
-            <small>{act.fechaCreacion}</small>
+          {actividades.map((act) => (
+            <th key={act.id}>
+              <div>{act.nombre}</div>
+              <small>{act.fechaCreacion}</small>
 
-            <button
-              onClick={() => eliminarActividad(act.id)}
-              className="btn-eliminar"
-            >
-              ×
-            </button>
-          </th>
-        ))}
+              <button
+                onClick={() => eliminarActividad(act.id)}
+                className="btn-eliminar"
+              >
+                ×
+              </button>
+            </th>
+          ))}
 
-            
+              
 
-            <th>Promedio</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
+              <th>Promedio</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {estudiantes.map((est) => {
-            const promedio = calcularPromedio(est.notas, actividades);
-            const estado = obtenerEstado(promedio, est.notas);
+          <tbody>
+            {estudiantes.map((est) => {
+              const promedio = calcularPromedio(est.notas, actividades);
+              const estado = obtenerEstado(promedio, est.notas);
 
-            return (
-              <tr key={est.id}>
-                <td>{est.nombre}</td>
+              return (
+                <tr key={est.id}>
+                  <td>{est.nombre}</td>
 
-                {actividades.map((act) => (
-                  <td key={act.id}>
-                    <input
-                      className="input-nota"
-                      type="number"
-                      min={config.escala.min}
-                      max={config.escala.max}
-                      step={config.escala.step}
-                      value={est.notas[act.id] || ""}
-                      onChange={(e) =>
-                        handleNotaChange(
-                          est.id,
-                          act.id,
-                          e.target.value
-                        )
-                      }
-                    />
+                  {actividades.map((act) => (
+                    <td key={act.id}>
+                      <input
+                        className="input-nota"
+                        type="number"
+                        min={config.escala.min}
+                        max={config.escala.max}
+                        step={config.escala.step}
+                        value={est.notas[act.id] || ""}
+                        onChange={(e) =>
+                          handleNotaChange(
+                            est.id,
+                            act.id,
+                            e.target.value
+                          )
+                        }
+                      />
+                    </td>
+                  ))}
+
+                  <td>{promedio.toFixed(config.redondeo)}</td>
+
+                  <td>
+                    <span className={`badge ${estado.clase}`}>
+                      {estado.texto}
+                    </span>
                   </td>
-                ))}
-
-                <td>{promedio.toFixed(config.redondeo)}</td>
-
-                <td>
-                  <span className={`badge ${estado.clase}`}>
-                    {estado.texto}
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>  
+      </div>
     </div>
   );
 }
