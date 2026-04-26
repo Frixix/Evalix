@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { estudiantesMock } from "../data/estudiantes";
 import "../styles/tabla.css";
 
@@ -14,6 +14,23 @@ const config = {
   redondeo: 2
 };
 
+const STORAGE_KEY = "evalix_datos";
+
+// ================================
+// CARGAR DATOS GUARDADOS
+// ================================
+const cargarDatosGuardados = () => {
+  const datosGuardados = localStorage.getItem(STORAGE_KEY);
+
+  if (!datosGuardados) return null;
+
+  try {
+    return JSON.parse(datosGuardados);
+  } catch {
+    return null;
+  }
+};
+
 function TablaNotas() {
   // ================================
   // FECHA HOY AUTOMÁTICA
@@ -23,26 +40,51 @@ function TablaNotas() {
   // ================================
   // ESTADOS PRINCIPALES
   // ================================
-  const [estudiantes, setEstudiantes] = useState(estudiantesMock);
+  const [estudiantes, setEstudiantes] = useState(() => {
+    const datos = cargarDatosGuardados();
+    return datos?.estudiantes || estudiantesMock;
+  });
+
+  const [actividades, setActividades] = useState(() => {
+    const datos = cargarDatosGuardados();
+
+    return (
+      datos?.actividades || [
+        {
+          id: 1,
+          nombre: "Actividad 1",
+          categoria: "Tarea",
+          fechaCreacion: hoy
+        },
+        {
+          id: 2,
+          nombre: "Actividad 2",
+          categoria: "Tarea",
+          fechaCreacion: hoy
+        }
+      ]
+    );
+  });
 
   const [nombreActividad, setNombreActividad] = useState("");
   const [fechaActividad, setFechaActividad] = useState(hoy);
-  const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
+  const [categoriaActividad, setCategoriaActividad] =
+    useState("Tarea");
 
-  const [actividades, setActividades] = useState([
-      {
-        id: 1,
-        nombre: "Actividad 1",
-        categoria: "Tarea",
-        fechaCreacion: hoy
-      },
-      {
-        id: 2,
-        nombre: "Actividad 2",
-        categoria: "Tarea",
-        fechaCreacion: hoy
-      }
-  ]);
+  // ================================
+  // PERSISTENCIA AUTOMÁTICA
+  // ================================
+  useEffect(() => {
+    const datos = {
+      estudiantes,
+      actividades
+    };
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(datos)
+    );
+  }, [estudiantes, actividades]);
 
   // ================================
   // PROMEDIO
@@ -79,21 +121,35 @@ function TablaNotas() {
   // ESTADO VISUAL
   // ================================
   const obtenerEstado = (promedio, notas) => {
-    const valores = Object.values(notas).filter((n) => n !== "");
+    const valores = Object.values(notas).filter(
+      (n) => n !== ""
+    );
 
     if (valores.length === 0) {
-      return { texto: "Sin datos", clase: "estado-neutral" };
+      return {
+        texto: "Sin datos",
+        clase: "estado-neutral"
+      };
     }
 
     if (promedio < 3) {
-      return { texto: "Pierde", clase: "estado-pierde" };
+      return {
+        texto: "Pierde",
+        clase: "estado-pierde"
+      };
     }
 
     if (promedio < 3.5) {
-      return { texto: "Riesgo", clase: "estado-riesgo" };
+      return {
+        texto: "Riesgo",
+        clase: "estado-riesgo"
+      };
     }
 
-    return { texto: "Aprueba", clase: "estado-aprueba" };
+    return {
+      texto: "Aprueba",
+      clase: "estado-aprueba"
+    };
   };
 
   // ================================
@@ -164,6 +220,7 @@ function TablaNotas() {
 
     setNombreActividad("");
     setFechaActividad(hoy);
+    setCategoriaActividad("Tarea");
   };
 
   // ================================
@@ -201,8 +258,11 @@ function TablaNotas() {
         type="text"
         placeholder="Nombre de la actividad"
         value={nombreActividad}
-        onChange={(e) => setNombreActividad(e.target.value)}
+        onChange={(e) =>
+          setNombreActividad(e.target.value)
+        }
       />
+
       <select
         value={categoriaActividad}
         onChange={(e) =>
@@ -219,10 +279,15 @@ function TablaNotas() {
       <input
         type="date"
         value={fechaActividad}
-        onChange={(e) => setFechaActividad(e.target.value)}
+        onChange={(e) =>
+          setFechaActividad(e.target.value)
+        }
       />
 
-      <button className="btn-agregar" onClick={agregarActividad}>
+      <button
+        className="btn-agregar"
+        onClick={agregarActividad}
+      >
         + Agregar actividad
       </button>
 
@@ -247,9 +312,10 @@ function TablaNotas() {
                     <button
                       className="btn-eliminar"
                       onClick={() => {
-                        const confirmar = window.confirm(
-                          `¿Eliminar "${act.nombre}"?\n\nEsta acción no se puede deshacer.`
-                        );
+                        const confirmar =
+                          window.confirm(
+                            `¿Eliminar "${act.nombre}"?\n\nEsta acción no se puede deshacer.`
+                          );
 
                         if (confirmar) {
                           eliminarActividad(act.id);
@@ -271,15 +337,23 @@ function TablaNotas() {
 
           <tbody>
             {estudiantes.map((est) => {
-              const promedio = calcularPromedio(est.notas, actividades);
-              const estado = obtenerEstado(promedio, est.notas);
+              const promedio = calcularPromedio(
+                est.notas,
+                actividades
+              );
+
+              const estado = obtenerEstado(
+                promedio,
+                est.notas
+              );
 
               return (
                 <tr key={est.id}>
                   <td>{est.nombre}</td>
 
                   {actividades.map((act) => {
-                    const esNP = est.notas[act.id] === "NP";
+                    const esNP =
+                      est.notas[act.id] === "NP";
 
                     return (
                       <td
@@ -322,10 +396,14 @@ function TablaNotas() {
                     );
                   })}
 
-                  <td>{promedio.toFixed(config.redondeo)}</td>
+                  <td>
+                    {promedio.toFixed(config.redondeo)}
+                  </td>
 
                   <td>
-                    <span className={`badge ${estado.clase}`}>
+                    <span
+                      className={`badge ${estado.clase}`}
+                    >
                       {estado.texto}
                     </span>
                   </td>
