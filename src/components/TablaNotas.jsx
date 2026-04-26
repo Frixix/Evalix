@@ -27,18 +27,21 @@ function TablaNotas() {
 
   const [nombreActividad, setNombreActividad] = useState("");
   const [fechaActividad, setFechaActividad] = useState(hoy);
+  const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
 
   const [actividades, setActividades] = useState([
-    {
-      id: 1,
-      nombre: "Actividad 1",
-      fechaCreacion: hoy
-    },
-    {
-      id: 2,
-      nombre: "Actividad 2",
-      fechaCreacion: hoy
-    }
+      {
+        id: 1,
+        nombre: "Actividad 1",
+        categoria: "Tarea",
+        fechaCreacion: hoy
+      },
+      {
+        id: 2,
+        nombre: "Actividad 2",
+        categoria: "Tarea",
+        fechaCreacion: hoy
+      }
   ]);
 
   // ================================
@@ -143,6 +146,7 @@ function TablaNotas() {
     const nuevaActividad = {
       id: Date.now(),
       nombre: nombreActividad,
+      categoria: categoriaActividad,
       fechaCreacion: fechaActividad
     };
 
@@ -199,6 +203,18 @@ function TablaNotas() {
         value={nombreActividad}
         onChange={(e) => setNombreActividad(e.target.value)}
       />
+      <select
+        value={categoriaActividad}
+        onChange={(e) =>
+          setCategoriaActividad(e.target.value)
+        }
+      >
+        <option value="Tarea">Tarea</option>
+        <option value="Quiz">Quiz</option>
+        <option value="Examen">Examen</option>
+        <option value="Proyecto">Proyecto</option>
+        <option value="Laboratorio">Laboratorio</option>
+      </select>
 
       <input
         type="date"
@@ -225,6 +241,7 @@ function TablaNotas() {
                 <th key={act.id}>
                   <div className="actividad-header">
                     <span>{act.nombre}</span>
+                    <small>{act.categoria}</small>
                     <small>{act.fechaCreacion}</small>
 
                     <button

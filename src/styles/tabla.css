@@ -8,17 +8,6 @@
   min-height: 100vh;
 }
 
-/* ================================
-   TÍTULO
-================================ */
-.tabla-titulo {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #111827;
-  letter-spacing: -0.02em;
-}
-
 /* =========================
    TÍTULO
 ========================= */
@@ -52,6 +41,35 @@
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
+/* =======================
+
+  Select 
+  ========================*/
+
+.tabla-container select {
+  padding: 10px 12px;
+  margin-right: 10px;
+
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.05);
+  color: #000000;
+
+  outline: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+  backdrop-filter: blur(6px);
+
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.tabla-container select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
 
 /* ================================
    BOTÓN AGREGAR ACTIVIDAD (PREMIUM)
@@ -61,7 +79,11 @@
   border: none;
   border-radius: 12px;
 
-  background: linear-gradient(#63a5f1);
+  background: linear-gradient(
+    135deg,
+    #60a5fa,
+    #3b82f6
+  );
   color: white;
 
   font-size: 14px;
