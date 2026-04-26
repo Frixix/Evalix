@@ -2,20 +2,19 @@ import { useState } from "react";
 import { estudiantesMock } from "../data/estudiantes";
 import "../styles/tabla.css";
 
+// ================================
+// CONFIGURACIÓN GLOBAL
+// ================================
+const config = {
+  escala: {
+    min: 0,
+    max: 5,
+    step: 0.1
+  },
+  redondeo: 2
+};
 
 function TablaNotas() {
-  // ================================
-  // CONFIGURACIÓN GLOBAL
-  // ================================
-  const config = {
-    escala: {
-      min: 0,
-      max: 5,
-      step: 0.1
-    },
-    redondeo: 2
-  };
-
   // ================================
   // FECHA HOY AUTOMÁTICA
   // ================================
@@ -44,6 +43,7 @@ function TablaNotas() {
 
   // ================================
   // PROMEDIO
+  // NP cuenta como 0
   // ================================
   const calcularPromedio = (notas, actividades = []) => {
     let suma = 0;
@@ -52,13 +52,18 @@ function TablaNotas() {
     actividades.forEach((act) => {
       const valor = notas?.[act.id];
 
-      if (valor !== "" && valor !== undefined) {
-        const numero = Number(valor);
+      if (valor === "" || valor === undefined) return;
 
-        if (!isNaN(numero)) {
-          suma += numero;
-          totalNotasValidas++;
-        }
+      if (valor === "NP") {
+        totalNotasValidas++;
+        return;
+      }
+
+      const numero = Number(valor);
+
+      if (!isNaN(numero)) {
+        suma += numero;
+        totalNotasValidas++;
       }
     });
 
@@ -156,19 +161,17 @@ function TablaNotas() {
     setNombreActividad("");
     setFechaActividad(hoy);
   };
+
   // ================================
   // ELIMINAR ACTIVIDAD
   // ================================
-
-    const eliminarActividad = (actividadId) => {
-    // 1. Quitar actividad del array
+  const eliminarActividad = (actividadId) => {
     const nuevasActividades = actividades.filter(
       (act) => act.id !== actividadId
     );
 
     setActividades(nuevasActividades);
 
-    // 2. Quitar nota asociada en cada estudiante
     const estudiantesActualizados = estudiantes.map((est) => {
       const nuevasNotas = { ...est.notas };
 
@@ -203,9 +206,14 @@ function TablaNotas() {
         onChange={(e) => setFechaActividad(e.target.value)}
       />
 
-      <button onClick={agregarActividad}>
-        Agregar actividad
+      <button className="btn-agregar" onClick={agregarActividad}>
+        + Agregar actividad
       </button>
+
+      <div className="leyenda-np">
+        <span className="badge-np">NP</span>
+        <p>No presentó / No entregó actividad</p>
+      </div>
 
       <div className="tabla-wrapper">
         <table className="tabla">
@@ -213,31 +221,31 @@ function TablaNotas() {
             <tr>
               <th>Estudiante</th>
 
-          {actividades.map((act) => (
-            <th key={act.id}>
-              <div>{act.nombre}</div>
-              <small>{act.fechaCreacion}</small>
+              {actividades.map((act) => (
+                <th key={act.id}>
+                  <div className="actividad-header">
+                    <span>{act.nombre}</span>
+                    <small>{act.fechaCreacion}</small>
 
-              <button
-                className="btn-eliminar"
-                onClick={() => {
-                  const confirmar = window.confirm(
-                    `¿Eliminar "${act.nombre}"?\n\nEsta acción no se puede deshacer.`
-                  );
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => {
+                        const confirmar = window.confirm(
+                          `¿Eliminar "${act.nombre}"?\n\nEsta acción no se puede deshacer.`
+                        );
 
-                    if (confirmar) {
-                      eliminarActividad(act.id);
-                    }
-                  }}
-                >
-                <span className="material-symbols-outlined">
-                  delete
-                </span>
-              </button>
-            </th>
-          ))}
-
-              
+                        if (confirmar) {
+                          eliminarActividad(act.id);
+                        }
+                      }}
+                    >
+                      <span className="material-symbols-outlined">
+                        delete
+                      </span>
+                    </button>
+                  </div>
+                </th>
+              ))}
 
               <th>Promedio</th>
               <th>Estado</th>
@@ -253,25 +261,49 @@ function TablaNotas() {
                 <tr key={est.id}>
                   <td>{est.nombre}</td>
 
-                  {actividades.map((act) => (
-                    <td key={act.id}>
-                      <input
-                        className="input-nota"
-                        type="number"
-                        min={config.escala.min}
-                        max={config.escala.max}
-                        step={config.escala.step}
-                        value={est.notas[act.id] || ""}
-                        onChange={(e) =>
-                          handleNotaChange(
-                            est.id,
-                            act.id,
-                            e.target.value
-                          )
-                        }
-                      />
-                    </td>
-                  ))}
+                  {actividades.map((act) => {
+                    const esNP = est.notas[act.id] === "NP";
+
+                    return (
+                      <td
+                        key={act.id}
+                        className={esNP ? "celda-np" : ""}
+                      >
+                        <input
+                          className="input-nota"
+                          type="number"
+                          min={config.escala.min}
+                          max={config.escala.max}
+                          step={config.escala.step}
+                          value={
+                            esNP
+                              ? ""
+                              : est.notas[act.id] || ""
+                          }
+                          onChange={(e) =>
+                            handleNotaChange(
+                              est.id,
+                              act.id,
+                              e.target.value
+                            )
+                          }
+                        />
+
+                        <button
+                          className="btn-np"
+                          onClick={() =>
+                            actualizarEstado(
+                              est.id,
+                              act.id,
+                              "NP"
+                            )
+                          }
+                        >
+                          NP
+                        </button>
+                      </td>
+                    );
+                  })}
 
                   <td>{promedio.toFixed(config.redondeo)}</td>
 
@@ -284,7 +316,7 @@ function TablaNotas() {
               );
             })}
           </tbody>
-        </table>  
+        </table>
       </div>
     </div>
   );

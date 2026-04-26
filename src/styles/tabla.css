@@ -19,6 +19,81 @@
   letter-spacing: -0.02em;
 }
 
+/* =========================
+   TÍTULO
+========================= */
+.tabla-titulo {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #000000;
+  letter-spacing: 0.3px;
+}
+
+/* =========================
+   CONTROLES SUPERIORES
+========================= */
+.tabla-container input[type="text"],
+.tabla-container input[type="date"] {
+  padding: 10px 12px;
+  margin-right: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: #000000;
+  outline: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(6px);
+}
+
+.tabla-container input[type="text"]:focus,
+.tabla-container input[type="date"]:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+
+/* ================================
+   BOTÓN AGREGAR ACTIVIDAD (PREMIUM)
+================================ */
+.btn-agregar {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(#63a5f1);
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  box-shadow:
+    0 6px 18px rgba(140, 142, 252, 0.25);
+
+  transition: all 0.25s ease;
+  margin-bottom: 16px;
+}
+
+.btn-agregar:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px rgba(127, 129, 241, 0.35);
+}
+
+.btn-agregar:active {
+  transform: translateY(0px);
+  box-shadow:
+    0 6px 18px rgba(99, 241, 241, 0.25);
+}
+
+
+
 /* ================================
    TABLA WRAPPER
 ================================ */
@@ -196,4 +271,17 @@
   font-size: 11px;
   font-weight: 500;
   color: #9ca3af;
+}
+/* ===========================
+  Celda Np 
+=============================*/
+
+.celda-np {
+  background: #fff1f2;
+  border-left: 3px solid #e11d48;
+}
+
+.badge-np {
+  background: #fee2e2;
+  color: #be123c;
 }
