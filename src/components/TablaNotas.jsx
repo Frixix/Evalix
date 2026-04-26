@@ -14,65 +14,64 @@ const config = {
   redondeo: 2
 };
 
-const STORAGE_KEY = "evalix_datos";
-
-// ================================
-// CARGAR DATOS GUARDADOS
-// ================================
-const cargarDatosGuardados = () => {
-  const datosGuardados = localStorage.getItem(STORAGE_KEY);
-
-  if (!datosGuardados) return null;
-
-  try {
-    return JSON.parse(datosGuardados);
-  } catch {
-    return null;
-  }
-};
-
 function TablaNotas() {
-  // ================================
-  // FECHA HOY AUTOMÁTICA
-  // ================================
   const hoy = new Date().toISOString().split("T")[0];
 
   // ================================
   // ESTADOS PRINCIPALES
   // ================================
-  const [estudiantes, setEstudiantes] = useState(() => {
-    const datos = cargarDatosGuardados();
-    return datos?.estudiantes || estudiantesMock;
-  });
-
-  const [actividades, setActividades] = useState(() => {
-    const datos = cargarDatosGuardados();
-
-    return (
-      datos?.actividades || [
-        {
-          id: 1,
-          nombre: "Actividad 1",
-          categoria: "Tarea",
-          fechaCreacion: hoy
-        },
-        {
-          id: 2,
-          nombre: "Actividad 2",
-          categoria: "Tarea",
-          fechaCreacion: hoy
-        }
-      ]
-    );
-  });
+  const [estudiantes, setEstudiantes] = useState(estudiantesMock);
 
   const [nombreActividad, setNombreActividad] = useState("");
   const [fechaActividad, setFechaActividad] = useState(hoy);
-  const [categoriaActividad, setCategoriaActividad] =
-    useState("Tarea");
+  const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
+
+  const [actividades, setActividades] = useState([
+    {
+      id: 1,
+      nombre: "Actividad 1",
+      categoria: "Tarea",
+      fechaCreacion: hoy
+    },
+    {
+      id: 2,
+      nombre: "Actividad 2",
+      categoria: "Tarea",
+      fechaCreacion: hoy
+    }
+  ]);
 
   // ================================
-  // PERSISTENCIA AUTOMÁTICA
+  // HYDRATION + VALIDACIÓN
+  // ================================
+  useEffect(() => {
+    const datosGuardados = localStorage.getItem("evalix_datos");
+
+    if (!datosGuardados) return;
+
+    try {
+      const datosParseados = JSON.parse(datosGuardados);
+
+      const estudiantesValidos =
+        Array.isArray(datosParseados.estudiantes);
+
+      const actividadesValidas =
+        Array.isArray(datosParseados.actividades);
+
+      if (estudiantesValidos && actividadesValidas) {
+        setEstudiantes(datosParseados.estudiantes);
+        setActividades(datosParseados.actividades);
+      }
+    } catch (error) {
+      console.error(
+        "Error cargando datos guardados:",
+        error
+      );
+    }
+  }, []);
+
+  // ================================
+  // PERSISTENCIA LOCAL
   // ================================
   useEffect(() => {
     const datos = {
@@ -81,14 +80,13 @@ function TablaNotas() {
     };
 
     localStorage.setItem(
-      STORAGE_KEY,
+      "evalix_datos",
       JSON.stringify(datos)
     );
   }, [estudiantes, actividades]);
 
   // ================================
   // PROMEDIO
-  // NP cuenta como 0
   // ================================
   const calcularPromedio = (notas, actividades = []) => {
     let suma = 0;
@@ -155,7 +153,11 @@ function TablaNotas() {
   // ================================
   // ACTUALIZAR NOTA
   // ================================
-  const actualizarEstado = (id, actividad, valor) => {
+  const actualizarEstado = (
+    id,
+    actividad,
+    valor
+  ) => {
     const nuevosEstudiantes = estudiantes.map((est) => {
       if (est.id === id) {
         return {
@@ -173,7 +175,11 @@ function TablaNotas() {
     setEstudiantes(nuevosEstudiantes);
   };
 
-  const handleNotaChange = (id, actividad, valor) => {
+  const handleNotaChange = (
+    id,
+    actividad,
+    valor
+  ) => {
     if (valor === "") {
       actualizarEstado(id, actividad, "");
       return;
@@ -206,15 +212,19 @@ function TablaNotas() {
       fechaCreacion: fechaActividad
     };
 
-    setActividades([...actividades, nuevaActividad]);
+    setActividades([
+      ...actividades,
+      nuevaActividad
+    ]);
 
-    const estudiantesActualizados = estudiantes.map((est) => ({
-      ...est,
-      notas: {
-        ...est.notas,
-        [nuevaActividad.id]: ""
-      }
-    }));
+    const estudiantesActualizados =
+      estudiantes.map((est) => ({
+        ...est,
+        notas: {
+          ...est.notas,
+          [nuevaActividad.id]: ""
+        }
+      }));
 
     setEstudiantes(estudiantesActualizados);
 
@@ -226,33 +236,38 @@ function TablaNotas() {
   // ================================
   // ELIMINAR ACTIVIDAD
   // ================================
-  const eliminarActividad = (actividadId) => {
-    const nuevasActividades = actividades.filter(
-      (act) => act.id !== actividadId
-    );
+  const eliminarActividad = (
+    actividadId
+  ) => {
+    const nuevasActividades =
+      actividades.filter(
+        (act) => act.id !== actividadId
+      );
 
     setActividades(nuevasActividades);
 
-    const estudiantesActualizados = estudiantes.map((est) => {
-      const nuevasNotas = { ...est.notas };
+    const estudiantesActualizados =
+      estudiantes.map((est) => {
+        const nuevasNotas = {
+          ...est.notas
+        };
 
-      delete nuevasNotas[actividadId];
+        delete nuevasNotas[actividadId];
 
-      return {
-        ...est,
-        notas: nuevasNotas
-      };
-    });
+        return {
+          ...est,
+          notas: nuevasNotas
+        };
+      });
 
     setEstudiantes(estudiantesActualizados);
   };
 
-  // ================================
-  // RENDER
-  // ================================
   return (
     <div className="tabla-container">
-      <h2 className="tabla-titulo">Tabla de Notas</h2>
+      <h2 className="tabla-titulo">
+        Tabla de Notas
+      </h2>
 
       <input
         type="text"
@@ -266,21 +281,29 @@ function TablaNotas() {
       <select
         value={categoriaActividad}
         onChange={(e) =>
-          setCategoriaActividad(e.target.value)
+          setCategoriaActividad(
+            e.target.value
+          )
         }
       >
         <option value="Tarea">Tarea</option>
         <option value="Quiz">Quiz</option>
         <option value="Examen">Examen</option>
-        <option value="Proyecto">Proyecto</option>
-        <option value="Laboratorio">Laboratorio</option>
+        <option value="Proyecto">
+          Proyecto
+        </option>
+        <option value="Laboratorio">
+          Laboratorio
+        </option>
       </select>
 
       <input
         type="date"
         value={fechaActividad}
         onChange={(e) =>
-          setFechaActividad(e.target.value)
+          setFechaActividad(
+            e.target.value
+          )
         }
       />
 
@@ -293,7 +316,9 @@ function TablaNotas() {
 
       <div className="leyenda-np">
         <span className="badge-np">NP</span>
-        <p>No presentó / No entregó actividad</p>
+        <p>
+          No presentó / No entregó actividad
+        </p>
       </div>
 
       <div className="tabla-wrapper">
@@ -306,8 +331,12 @@ function TablaNotas() {
                 <th key={act.id}>
                   <div className="actividad-header">
                     <span>{act.nombre}</span>
-                    <small>{act.categoria}</small>
-                    <small>{act.fechaCreacion}</small>
+                    <small>
+                      {act.categoria}
+                    </small>
+                    <small>
+                      {act.fechaCreacion}
+                    </small>
 
                     <button
                       className="btn-eliminar"
@@ -318,7 +347,9 @@ function TablaNotas() {
                           );
 
                         if (confirmar) {
-                          eliminarActividad(act.id);
+                          eliminarActividad(
+                            act.id
+                          );
                         }
                       }}
                     >
@@ -337,15 +368,17 @@ function TablaNotas() {
 
           <tbody>
             {estudiantes.map((est) => {
-              const promedio = calcularPromedio(
-                est.notas,
-                actividades
-              );
+              const promedio =
+                calcularPromedio(
+                  est.notas,
+                  actividades
+                );
 
-              const estado = obtenerEstado(
-                promedio,
-                est.notas
-              );
+              const estado =
+                obtenerEstado(
+                  promedio,
+                  est.notas
+                );
 
               return (
                 <tr key={est.id}>
@@ -353,23 +386,36 @@ function TablaNotas() {
 
                   {actividades.map((act) => {
                     const esNP =
-                      est.notas[act.id] === "NP";
+                      est.notas[act.id] ===
+                      "NP";
 
                     return (
                       <td
                         key={act.id}
-                        className={esNP ? "celda-np" : ""}
+                        className={
+                          esNP
+                            ? "celda-np"
+                            : ""
+                        }
                       >
                         <input
                           className="input-nota"
                           type="number"
-                          min={config.escala.min}
-                          max={config.escala.max}
-                          step={config.escala.step}
+                          min={
+                            config.escala.min
+                          }
+                          max={
+                            config.escala.max
+                          }
+                          step={
+                            config.escala.step
+                          }
                           value={
                             esNP
                               ? ""
-                              : est.notas[act.id] || ""
+                              : est.notas[
+                                  act.id
+                                ] || ""
                           }
                           onChange={(e) =>
                             handleNotaChange(
@@ -397,7 +443,9 @@ function TablaNotas() {
                   })}
 
                   <td>
-                    {promedio.toFixed(config.redondeo)}
+                    {promedio.toFixed(
+                      config.redondeo
+                    )}
                   </td>
 
                   <td>
