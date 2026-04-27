@@ -26,6 +26,8 @@ function TablaNotas() {
   const [fechaActividad, setFechaActividad] = useState(hoy);
   const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
 
+  const [nombreEstudiante, setNombreEstudiante] = useState("");
+
   const [actividades, setActividades] = useState([
     {
       id: 1,
@@ -233,6 +235,33 @@ function TablaNotas() {
     setCategoriaActividad("Tarea");
   };
 
+  
+
+ // ================================
+  // AGREGAR ESTUDIANTE
+  // ================================
+  const agregarEstudiante = () => {
+    if (!nombreEstudiante.trim()) return;
+
+    const notasIniciales = {};
+
+    actividades.forEach((act) => {
+      notasIniciales[act.id] = "";
+    });
+
+    const nuevoEstudiante = {
+      id: Date.now(),
+      nombre: nombreEstudiante,
+      notas: notasIniciales
+    };
+
+    setEstudiantes([
+      ...estudiantes,
+      nuevoEstudiante
+    ]);
+
+    setNombreEstudiante("");
+  };
   // ================================
   // ELIMINAR ACTIVIDAD
   // ================================
@@ -313,6 +342,22 @@ function TablaNotas() {
       >
         + Agregar actividad
       </button>
+
+            <input
+          type="text"
+          placeholder="Nombre del estudiante"
+          value={nombreEstudiante}
+          onChange={(e) =>
+            setNombreEstudiante(e.target.value)
+          }
+        />
+
+        <button
+          className="btn-agregar"
+          onClick={agregarEstudiante}
+        >
+          + Agregar estudiante
+        </button>
 
       <div className="leyenda-np">
         <span className="badge-np">NP</span>
