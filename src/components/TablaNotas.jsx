@@ -43,6 +43,14 @@ function TablaNotas() {
     }
   ]);
 
+    const eliminarEstudiante = (estudianteId) => {
+    const nuevosEstudiantes = estudiantes.filter(
+      (est) => est.id !== estudianteId
+    );
+
+      setEstudiantes(nuevosEstudiantes);
+    };
+
   // ================================
   // HYDRATION + VALIDACIÓN
   // ================================
@@ -427,7 +435,28 @@ function TablaNotas() {
 
               return (
                 <tr key={est.id}>
-                  <td>{est.nombre}</td>
+                  <td>
+                    <div className="estudiante-info">
+                      <span>{est.nombre}</span>
+
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => {
+                          const confirmar = window.confirm(
+                            `¿Eliminar a "${est.nombre}"?\n\nEsta acción no se puede deshacer.`
+                          );
+
+                          if (confirmar) {
+                            eliminarEstudiante(est.id);
+                          }
+                        }}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
+                      </button>
+                    </div>
+                  </td>
 
                   {actividades.map((act) => {
                     const esNP =

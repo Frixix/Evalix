@@ -71,7 +71,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 
 ---
 
-## 📑 FASE 5: Actividades y Categorías
+~~ ## 📑 FASE 5: Actividades y Categorías~~ 
 **Objetivo:** Estructurar las notas profesionalmente.
 
 1.  **Modelo de Actividades:** Definir cada actividad con un ID y una categoría asociada.
