@@ -80,7 +80,7 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 
 ---
 
-## 💾 FASE 6: Persistencia Local
+## 💾 ~~ FASE 6: Persistencia Local~~ 
 **Objetivo:** Que los datos no se borren al cerrar el navegador.
 
 1.  **LocalStorage:** Implementar un efecto (`useEffect`) que guarde el estado en el navegador.

@@ -21,13 +21,11 @@ function TablaNotas() {
   // ESTADOS PRINCIPALES
   // ================================
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
-
   const [nombreActividad, setNombreActividad] = useState("");
   const [fechaActividad, setFechaActividad] = useState(hoy);
   const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
-
   const [nombreEstudiante, setNombreEstudiante] = useState("");
-
+  const [busqueda, setBusqueda] = useState("");
   const [actividades, setActividades] = useState([
     {
       id: 1,
@@ -95,6 +93,13 @@ function TablaNotas() {
     );
   }, [estudiantes, actividades]);
 
+
+
+  const estudiantesFiltrados = estudiantes.filter((est) =>
+    est.nombre
+      .toLowerCase()
+      .includes(busqueda.toLowerCase())
+  );
   // ================================
   // PROMEDIO
   // ================================
@@ -270,32 +275,29 @@ function TablaNotas() {
 
     setNombreEstudiante("");
   };
+
   // ================================
   // ELIMINAR ACTIVIDAD
   // ================================
-  const eliminarActividad = (
-    actividadId
-  ) => {
-    const nuevasActividades =
-      actividades.filter(
-        (act) => act.id !== actividadId
-      );
+  const eliminarActividad = (actividadId) => {
+  const nuevasActividades = actividades.filter(
+      (act) => act.id !== actividadId
+    );
 
     setActividades(nuevasActividades);
 
-    const estudiantesActualizados =
-      estudiantes.map((est) => {
-        const nuevasNotas = {
-          ...est.notas
-        };
+    const estudiantesActualizados = estudiantes.map((est) => {
+      const nuevasNotas = {
+        ...est.notas
+      };
 
-        delete nuevasNotas[actividadId];
+      delete nuevasNotas[actividadId];
 
-        return {
-          ...est,
-          notas: nuevasNotas
-        };
-      });
+      return {
+        ...est,
+        notas: nuevasNotas
+      };
+    });
 
     setEstudiantes(estudiantesActualizados);
   };
@@ -367,6 +369,14 @@ function TablaNotas() {
           + Agregar estudiante
         </button>
 
+          {/* Buscar estudiante */}
+          <input
+            type="text" 
+            placeholder="Buscar estudiante..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+
       <div className="leyenda-np">
         <span className="badge-np">NP</span>
         <p>
@@ -420,7 +430,7 @@ function TablaNotas() {
           </thead>
 
           <tbody>
-            {estudiantes.map((est) => {
+            {estudiantesFiltrados.map((est) => {
               const promedio =
                 calcularPromedio(
                   est.notas,
