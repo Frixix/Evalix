@@ -22,3 +22,23 @@
 .nav button:hover {
   background: #374151;
 }
+
+
+.btn-secundario {
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+
+  background: white;
+  color: #111827;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secundario:hover {
+  background: #f3f4f6;
+}

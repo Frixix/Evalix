@@ -9,10 +9,7 @@ function App() {
 
   // 🔥 ESTADO GLOBAL
   const [estudiantes, setEstudiantes] = useState(estudiantesMock);
-
-
-  console.log("MOCK:", estudiantesMock);
-  console.log("STATE:", estudiantes);
+  
   return (
     <>
       <Header setVista={setVista} />
@@ -26,9 +23,8 @@ function App() {
 
       {vista === "importar" && (
         <ImportarCSV
-          onImport={(nuevos) =>
-            setEstudiantes((prev) => [...prev, ...nuevos])
-          }
+          onImport={onImport}
+          actividades={actividades}
         />
       )}
     </>
