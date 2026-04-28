@@ -122,13 +122,22 @@
 .tabla-wrapper {
   background: white;
   border-radius: 18px;
-  overflow: hidden;
+  overflow-x: auto;   /* 👈 cambio clave */
+  overflow-y: hidden; /* opcional */
   box-shadow:
     0 8px 30px rgba(15, 23, 42, 0.06),
     0 2px 8px rgba(15, 23, 42, 0.04);
   border: 1px solid #eef2f7;
 }
+.tabla-wrapper {
+  background: white;
+  border-radius: 18px;
 
+  overflow-x: auto;
+  overflow-y: auto;   /* 👈 este es clave */
+  max-height: 550px;  /* 👈 este es el otro clave */
+
+}
 /* ================================
    TABLA
 ================================ */
@@ -306,4 +315,35 @@
 .badge-np {
   background: #fee2e2;
   color: #be123c;
+}
+
+/* ===========================
+  Celda Sin Nota  
+
+=============================*/
+  .tabla th:first-child,
+  .tabla td:first-child {
+    position: sticky;
+    left: 0;
+    background: white; /* MUY importante */
+    z-index: 2;
+  }
+
+  .tabla th:first-child {
+  z-index: 3;
+}
+
+.tabla th:first-child,
+.tabla td:first-child {
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.08);
+}
+.tabla thead th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.tabla thead th:first-child {
+  z-index: 5; /* 👈 más alto que todo */
 }
