@@ -101,9 +101,9 @@ Construir una aplicación funcional de gestión de notas desde cero hasta una ve
 ## 📥 FASE 8: Importación de Datos (CSV)
 **Objetivo:** Eliminar el registro manual de 40 estudiantes.
 
-1.  **File Input:** Botón para cargar archivos `.csv`.
-2.  **Parser:** Convertir el texto del CSV a objetos de JavaScript.
-3.  **Mapeo:** Integrar los nuevos estudiantes al estado actual.
+1. Definir formato estándar (TU formato)
+2. Dar plantilla descargable
+3. Adaptar el importador a ese formato
 
 ---
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { estudiantesMock } from "../data/estudiantes";
 import "../styles/tabla.css";
 
 // ================================
@@ -14,13 +13,12 @@ const config = {
   redondeo: 2
 };
 
-function TablaNotas() {
+function TablaNotas({ estudiantes, setEstudiantes }) {
   const hoy = new Date().toISOString().split("T")[0];
 
   // ================================
   // ESTADOS PRINCIPALES
   // ================================
-  const [estudiantes, setEstudiantes] = useState(estudiantesMock);
   const [nombreActividad, setNombreActividad] = useState("");
   const [fechaActividad, setFechaActividad] = useState(hoy);
   const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
@@ -92,7 +90,6 @@ function TablaNotas() {
       JSON.stringify(datos)
     );
   }, [estudiantes, actividades]);
-
 
 
   const estudiantesFiltrados = estudiantes.filter((est) =>
@@ -301,6 +298,7 @@ function TablaNotas() {
 
     setEstudiantes(estudiantesActualizados);
   };
+  
 
   return (
     <div className="tabla-container">
@@ -544,6 +542,7 @@ function TablaNotas() {
             })}
           </tbody>
         </table>
+        
       </div>
     </div>
   );
