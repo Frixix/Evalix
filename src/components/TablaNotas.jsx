@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../styles/tabla.css";
 
 // ================================
@@ -13,7 +13,12 @@ const config = {
   redondeo: 2
 };
 
-function TablaNotas({ estudiantes, setEstudiantes }) {
+function TablaNotas({
+    estudiantes,
+    setEstudiantes,
+    actividades,
+    setActividades
+  }) {
   const hoy = new Date().toISOString().split("T")[0];
 
   // ================================
@@ -24,20 +29,6 @@ function TablaNotas({ estudiantes, setEstudiantes }) {
   const [categoriaActividad, setCategoriaActividad] = useState("Tarea");
   const [nombreEstudiante, setNombreEstudiante] = useState("");
   const [busqueda, setBusqueda] = useState("");
-  const [actividades, setActividades] = useState([
-    {
-      id: 1,
-      nombre: "Actividad 1",
-      categoria: "Tarea",
-      fechaCreacion: hoy
-    },
-    {
-      id: 2,
-      nombre: "Actividad 2",
-      categoria: "Tarea",
-      fechaCreacion: hoy
-    }
-  ]);
 
     const eliminarEstudiante = (estudianteId) => {
     const nuevosEstudiantes = estudiantes.filter(
@@ -47,56 +38,6 @@ function TablaNotas({ estudiantes, setEstudiantes }) {
       setEstudiantes(nuevosEstudiantes);
     };
 
-  // ================================
-  // HYDRATION + VALIDACIÓN
-  // ================================
-  useEffect(() => {
-    const datosGuardados = localStorage.getItem("evalix_datos");
-
-    if (!datosGuardados) return;
-
-    try {
-      const datosParseados = JSON.parse(datosGuardados);
-
-      const estudiantesValidos =
-        Array.isArray(datosParseados.estudiantes);
-
-      const actividadesValidas =
-        Array.isArray(datosParseados.actividades);
-
-      if (estudiantesValidos && actividadesValidas) {
-        setEstudiantes(datosParseados.estudiantes);
-        setActividades(datosParseados.actividades);
-      }
-    } catch (error) {
-      console.error(
-        "Error cargando datos guardados:",
-        error
-      );
-    }
-  }, []);
-
-  // ================================
-  // PERSISTENCIA LOCAL
-  // ================================
-  useEffect(() => {
-    const datos = {
-      estudiantes,
-      actividades
-    };
-
-    localStorage.setItem(
-      "evalix_datos",
-      JSON.stringify(datos)
-    );
-  }, [estudiantes, actividades]);
-
-
-  const estudiantesFiltrados = estudiantes.filter((est) =>
-    est.nombre
-      .toLowerCase()
-      .includes(busqueda.toLowerCase())
-  );
   // ================================
   // PROMEDIO
   // ================================
@@ -298,7 +239,16 @@ function TablaNotas({ estudiantes, setEstudiantes }) {
 
     setEstudiantes(estudiantesActualizados);
   };
-  
+    // ================================
+  // filtrar estudiantes
+  // ================================
+
+  const estudiantesFiltrados = estudiantes.filter((est) =>
+    est.nombre
+      .toLowerCase()
+      .includes(busqueda.toLowerCase())
+  );
+
 
   return (
     <div className="tabla-container">

@@ -1,4 +1,8 @@
-function ImportarCSV({ onImport, actividades }) {
+function ImportarCSV({
+  onImport,
+  actividades,
+  estudiantes
+}) {
   const handleImportCSV = (e) => {
     
     const archivo = e.target.files[0];
@@ -17,14 +21,31 @@ function ImportarCSV({ onImport, actividades }) {
         .map((fila) => {
           const [nombre] = fila.split(",");
 
+          if (!nombre?.trim()) return null;
+
+          const notasIniciales = {};
+
+          actividades.forEach((act) => {
+            notasIniciales[act.id] = "";
+          });
+
           return {
             id: Date.now() + Math.random(),
             nombre: nombre.trim(),
-            notas: {}
+            notas: notasIniciales
           };
-        });
+        })
+        .filter(Boolean);
 
-      onImport(nuevos);
+      const nuevosFiltrados = nuevos.filter((nuevo) => {
+        return !estudiantes.some(
+          (existente) =>
+            existente.nombre.toLowerCase().trim() ===
+            nuevo.nombre.toLowerCase().trim()
+        );
+      });
+
+      onImport(nuevosFiltrados);
     };
 
     lector.readAsText(archivo);
