@@ -1,8 +1,12 @@
+import { useState } from "react";
+
 function ImportarCSV({
+  
   onImport,
   actividades,
   estudiantes
 }) {
+  const [mensajeImportacion, setMensajeImportacion] = useState("");
   const handleImportCSV = (e) => {
     
     const archivo = e.target.files[0];
@@ -47,22 +51,33 @@ function ImportarCSV({
         })
         .filter(Boolean);
 
-      const nuevosFiltrados = nuevos.filter((nuevo) => {
+        const nuevosFiltrados = nuevos.filter((nuevo) => {
+          return !estudiantes.some(
+            (existente) =>
+              existente.nombre.toLowerCase().trim() ===
+              nuevo.nombre.toLowerCase().trim()
+        );
+      });
 
         if (nuevosFiltrados.length === 0) {
-          alert(
+          setMensajeImportacion(
             "No se encontraron estudiantes válidos para importar."
           );
           return;
         }
-        return !estudiantes.some(
-          (existente) =>
-            existente.nombre.toLowerCase().trim() ===
-            nuevo.nombre.toLowerCase().trim()
-        );
-      });
 
       onImport(nuevosFiltrados);
+
+      const duplicadosOmitidos =
+        nuevos.length - nuevosFiltrados.length;
+
+      setMensajeImportacion(
+        `Se importaron ${nuevosFiltrados.length} estudiantes correctamente. ${
+          duplicadosOmitidos > 0
+            ? `${duplicadosOmitidos} duplicados omitidos.`
+            : ""
+        }`
+      );
     };
 
     lector.readAsText(archivo);
@@ -112,6 +127,12 @@ function ImportarCSV({
     >
       Descargar plantilla
     </button>
+
+    {mensajeImportacion && (
+      <p className="mensaje-importacion">
+        {mensajeImportacion}
+      </p>
+    )}
   </div>
 );
 }
