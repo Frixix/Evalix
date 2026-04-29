@@ -12,8 +12,18 @@ function ImportarCSV({
 
     lector.onload = (evento) => {
       const texto = evento.target.result;
+      const lineas = texto.split(/\r?\n/);
 
-      const filas = texto.split(/\r?\n/).slice(1);
+        const encabezado = lineas[0]?.trim().toLowerCase();
+
+        if (encabezado !== "nombre") {
+          alert(
+            'CSV inválido. La primera columna debe llamarse "nombre".'
+          );
+          return;
+        }
+
+      const filas = lineas.slice(1);
 
       const nuevos = filas
         .map((f) => f.trim())
@@ -38,6 +48,13 @@ function ImportarCSV({
         .filter(Boolean);
 
       const nuevosFiltrados = nuevos.filter((nuevo) => {
+
+        if (nuevosFiltrados.length === 0) {
+          alert(
+            "No se encontraron estudiantes válidos para importar."
+          );
+          return;
+        }
         return !estudiantes.some(
           (existente) =>
             existente.nombre.toLowerCase().trim() ===
