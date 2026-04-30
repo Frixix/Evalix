@@ -1,8 +1,12 @@
+import { useState } from "react";
+
 function ImportarCSV({
+  
   onImport,
   actividades,
   estudiantes
 }) {
+  const [mensajeImportacion, setMensajeImportacion] = useState("");
   const handleImportCSV = (e) => {
     
     const archivo = e.target.files[0];
@@ -12,8 +16,18 @@ function ImportarCSV({
 
     lector.onload = (evento) => {
       const texto = evento.target.result;
+      const lineas = texto.split(/\r?\n/);
 
-      const filas = texto.split(/\r?\n/).slice(1);
+        const encabezado = lineas[0]?.trim().toLowerCase();
+
+        if (encabezado !== "nombre") {
+          alert(
+            'CSV inválido. La primera columna debe llamarse "nombre".'
+          );
+          return;
+        }
+
+      const filas = lineas.slice(1);
 
       const nuevos = filas
         .map((f) => f.trim())
@@ -37,15 +51,33 @@ function ImportarCSV({
         })
         .filter(Boolean);
 
-      const nuevosFiltrados = nuevos.filter((nuevo) => {
-        return !estudiantes.some(
-          (existente) =>
-            existente.nombre.toLowerCase().trim() ===
-            nuevo.nombre.toLowerCase().trim()
+        const nuevosFiltrados = nuevos.filter((nuevo) => {
+          return !estudiantes.some(
+            (existente) =>
+              existente.nombre.toLowerCase().trim() ===
+              nuevo.nombre.toLowerCase().trim()
         );
       });
 
+        if (nuevosFiltrados.length === 0) {
+          setMensajeImportacion(
+            "No se encontraron estudiantes válidos para importar."
+          );
+          return;
+        }
+
       onImport(nuevosFiltrados);
+
+      const duplicadosOmitidos =
+        nuevos.length - nuevosFiltrados.length;
+
+      setMensajeImportacion(
+        `Se importaron ${nuevosFiltrados.length} estudiantes correctamente. ${
+          duplicadosOmitidos > 0
+            ? `${duplicadosOmitidos} duplicados omitidos.`
+            : ""
+        }`
+      );
     };
 
     lector.readAsText(archivo);
@@ -95,6 +127,12 @@ function ImportarCSV({
     >
       Descargar plantilla
     </button>
+
+    {mensajeImportacion && (
+      <p className="mensaje-importacion">
+        {mensajeImportacion}
+      </p>
+    )}
   </div>
 );
 }
