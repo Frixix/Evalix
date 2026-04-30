@@ -3,6 +3,7 @@ import FiltrosTabla from "./FiltrosTabla";
 import FormActividad from "./FormActividad";
 import FormEstudiante from "./FormEstudiante";
 import TablaNotasHeader from "./TablaNotasHeader";
+import TablaNotasRow from "./TablaNotasRow";
 
 
 import "../../styles/tabla.css";
