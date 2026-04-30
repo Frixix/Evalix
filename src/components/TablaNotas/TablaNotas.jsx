@@ -1,9 +1,14 @@
 import { useState } from "react";
-import "../styles/tabla.css";
+import FiltrosTabla from "././FiltrosTabla";
+import FormActividad from "./FormActividad";
+import FormEstudiante from "./FormEstudiante";
+
+
+import "../../styles/tabla.css";
 import {
   calcularPromedio,
   obtenerEstado
-} from "../utils/notas";
+} from "../../utils/notas";
 
 // ================================
 // CONFIGURACIÓN GLOBAL
@@ -195,73 +200,24 @@ function TablaNotas({
         Tabla de Notas
       </h2>
 
-      <input
-        type="text"
-        placeholder="Nombre de la actividad"
-        value={nombreActividad}
-        onChange={(e) =>
-          setNombreActividad(e.target.value)
-        }
+      <FormActividad
+        nombreActividad={nombreActividad}
+        setNombreActividad={setNombreActividad}
+        categoriaActividad={categoriaActividad}
+        setCategoriaActividad={setCategoriaActividad}
+        fechaActividad={fechaActividad}
+        setFechaActividad={setFechaActividad}
+        agregarActividad={agregarActividad}
       />
-
-      <select
-        value={categoriaActividad}
-        onChange={(e) =>
-          setCategoriaActividad(
-            e.target.value
-          )
-        }
-      >
-        <option value="Tarea">Tarea</option>
-        <option value="Quiz">Quiz</option>
-        <option value="Examen">Examen</option>
-        <option value="Proyecto">
-          Proyecto
-        </option>
-        <option value="Laboratorio">
-          Laboratorio
-        </option>
-      </select>
-
-      <input
-        type="date"
-        value={fechaActividad}
-        onChange={(e) =>
-          setFechaActividad(
-            e.target.value
-          )
-        }
-      />
-
-      <button
-        className="btn-agregar"
-        onClick={agregarActividad}
-      >
-        + Agregar actividad
-      </button>
-
-            <input
-          type="text"
-          placeholder="Nombre del estudiante"
-          value={nombreEstudiante}
-          onChange={(e) =>
-            setNombreEstudiante(e.target.value)
-          }
-        />
-
-        <button
-          className="btn-agregar"
-          onClick={agregarEstudiante}
-        >
-          + Agregar estudiante
-        </button>
-
+            <FormEstudiante
+              nombreEstudiante={nombreEstudiante}
+              setNombreEstudiante={setNombreEstudiante}
+              agregarEstudiante={agregarEstudiante}
+            />
           {/* Buscar estudiante */}
-          <input
-            type="text" 
-            placeholder="Buscar estudiante..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
+          <FiltrosTabla
+            busqueda={busqueda}
+            setBusqueda={setBusqueda}
           />
 
       <div className="leyenda-np">

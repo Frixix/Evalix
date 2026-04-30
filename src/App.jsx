@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TablaNotas from "./components/TablaNotas";
+import TablaNotas from "./components/TablaNotas/TablaNotas";
 import ImportarCSV from "./components/ImportarCSV";
 import Header from "./components/Header";
 import { estudiantesMock } from "./data/estudiantes";
