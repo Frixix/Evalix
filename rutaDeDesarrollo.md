@@ -148,3 +148,29 @@ estudiante.notas = {
 ## Próxima Prioridad
 
 **FASE 11.1 — Limpieza Arquitectónica**
+
+
+Ruta de arquitectura para supabase 
+
+
+
+src/
+│
+├── components/
+│   ├── TablaNotas/
+│   │   ├── TablaNotas.jsx
+│   │   ├── TablaNotasHeader.jsx
+│   │   ├── TablaNotasRow.jsx
+│   │   ├── FormActividad.jsx
+│   │   ├── FormEstudiante.jsx
+│   │   └── FiltrosTabla.jsx
+│
+├── hooks/
+│   ├── usePersistenciaNotas.js
+│   └── useTablaNotas.js        ← NUEVO
+│
+├── services/
+│   └── notasService.js         ← FUTURO SUPABASE
+│
+├── utils/
+│   └── notas.js
