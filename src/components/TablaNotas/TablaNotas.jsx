@@ -194,11 +194,14 @@ function TablaNotas({
         setFechaActividad={setFechaActividad}
         agregarActividad={agregarActividad}
       />
-            <FormEstudiante
-              nombreEstudiante={nombreEstudiante}
-              setNombreEstudiante={setNombreEstudiante}
-              agregarEstudiante={agregarEstudiante}
-            />
+          <FormEstudiante
+            nombreEstudiante={nombreEstudiante}
+            setNombreEstudiante={setNombreEstudiante}
+            agregarEstudiante={() => {
+              agregarEstudiante(nombreEstudiante);
+              setNombreEstudiante("");
+            }}
+          />
           {/* Buscar estudiante */}
           <FiltrosTabla
             busqueda={busqueda}
