@@ -77,12 +77,42 @@ function useTablaNotas({
   setEstudiantes(estudiantesActualizados);
 };
 
-  return {
-    agregarEstudiante,
-    eliminarEstudiante,
-    agregarActividad
-      
+// ================================
+  // ELIMINAR ACTIVIDAD
+  // ================================
+  const eliminarActividad = (
+    actividadId
+  ) => {
+    const nuevasActividades =
+      actividades.filter(
+        (act) => act.id !== actividadId
+      );
+
+    setActividades(nuevasActividades);
+
+    const estudiantesActualizados =
+      estudiantes.map((est) => {
+        const nuevasNotas = {
+          ...est.notas
+        };
+
+        delete nuevasNotas[actividadId];
+
+        return {
+          ...est,
+          notas: nuevasNotas
+        };
+      });
+
+    setEstudiantes(estudiantesActualizados);
   };
+
+    return {
+      agregarEstudiante,
+      eliminarEstudiante,
+      agregarActividad,
+      eliminarActividad
+    };
   
 }
 
