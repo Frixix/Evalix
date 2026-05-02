@@ -4,6 +4,7 @@ import FormActividad from "./FormActividad";
 import FormEstudiante from "./FormEstudiante";
 import TablaNotasHeader from "./TablaNotasHeader";
 import TablaNotasRow from "./TablaNotasRow";
+import useTablaNotas from "../../hooks/useTablaNotas";
 
 
 import "../../styles/tabla.css";
@@ -131,34 +132,16 @@ function TablaNotas({
     setFechaActividad(hoy);
     setCategoriaActividad("Tarea");
   };
-
-  
-
  // ================================
-  // AGREGAR ESTUDIANTE
+  // USO DEL HOOK PERSONALIZADO Agregar estudiante
   // ================================
-  const agregarEstudiante = () => {
-    if (!nombreEstudiante.trim()) return;
-
-    const notasIniciales = {};
-
-    actividades.forEach((act) => {
-      notasIniciales[act.id] = "";
-    });
-
-    const nuevoEstudiante = {
-      id: Date.now(),
-      nombre: nombreEstudiante,
-      notas: notasIniciales
-    };
-
-    setEstudiantes([
-      ...estudiantes,
-      nuevoEstudiante
-    ]);
-
-    setNombreEstudiante("");
-  };
+  
+  const { agregarEstudiante } =
+  useTablaNotas({
+    estudiantes,
+    setEstudiantes,
+    actividades
+  });
 
   // ================================
   // ELIMINAR ACTIVIDAD
