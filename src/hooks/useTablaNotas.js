@@ -42,6 +42,10 @@ function useTablaNotas({
   const eliminarEstudiante = (
     estudianteId
   ) => {
+    tablaNotasService.eliminarEstudiante(
+      estudianteId
+    );
+
     const nuevosEstudiantes =
       estudiantes.filter(
         (est) => est.id !== estudianteId
