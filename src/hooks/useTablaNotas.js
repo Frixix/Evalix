@@ -96,6 +96,10 @@ function useTablaNotas({
   const eliminarActividad = (
     actividadId
   ) => {
+
+    tablaNotasService.eliminarActividad(
+      actividadId
+    );
     const nuevasActividades =
       actividades.filter(
         (act) => act.id !== actividadId
