@@ -5,6 +5,7 @@ import FormEstudiante from "./FormEstudiante";
 import TablaNotasHeader from "./TablaNotasHeader";
 import TablaNotasRow from "./TablaNotasRow";
 import useTablaNotas from "../../hooks/useTablaNotas";
+import useFiltroEstudiantes from "../../hooks/useFiltroEstudiantes";
 
 
 import "../../styles/tabla.css";
@@ -44,8 +45,8 @@ function TablaNotas({
 
   
  // ================================
-  // USO DEL HOOK PERSONALIZADO Agregar estudiante
-  // ================================
+ // HOOK PRINCIPAL DE TABLA DE NOTAS
+ // ================================
   
   const {
     agregarEstudiante,
@@ -65,14 +66,11 @@ function TablaNotas({
     // ================================
   // filtrar estudiantes
   // ================================
-
-  const estudiantesFiltrados = estudiantes.filter((est) =>
-    est.nombre
-      .toLowerCase()
-      .includes(busqueda.toLowerCase())
+  const estudiantesFiltrados =
+  useFiltroEstudiantes(
+    estudiantes,
+    busqueda
   );
-
-
   return (
     <div className="tabla-container">
       <h2 className="tabla-titulo">
