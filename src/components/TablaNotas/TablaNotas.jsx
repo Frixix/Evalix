@@ -91,50 +91,19 @@ function TablaNotas({
     actualizarEstado(id, actividad, numero);
   };
 
-  // ================================
-  // AGREGAR ACTIVIDAD
-  // ================================
-  const agregarActividad = () => {
-    if (!nombreActividad.trim()) return;
-
-    const nuevaActividad = {
-      id: Date.now(),
-      nombre: nombreActividad,
-      categoria: categoriaActividad,
-      fechaCreacion: fechaActividad
-    };
-
-    setActividades([
-      ...actividades,
-      nuevaActividad
-    ]);
-
-    const estudiantesActualizados =
-      estudiantes.map((est) => ({
-        ...est,
-        notas: {
-          ...est.notas,
-          [nuevaActividad.id]: ""
-        }
-      }));
-
-    setEstudiantes(estudiantesActualizados);
-
-    setNombreActividad("");
-    setFechaActividad(hoy);
-    setCategoriaActividad("Tarea");
-  };
  // ================================
   // USO DEL HOOK PERSONALIZADO Agregar estudiante
   // ================================
   
   const {
     agregarEstudiante,
-    eliminarEstudiante
+    eliminarEstudiante,
+    agregarActividad
   } = useTablaNotas({
     estudiantes,
     setEstudiantes,
-    actividades
+    actividades,
+    setActividades
   });
 
   // ================================
@@ -179,15 +148,25 @@ function TablaNotas({
         Tabla de Notas
       </h2>
 
-      <FormActividad
-        nombreActividad={nombreActividad}
-        setNombreActividad={setNombreActividad}
-        categoriaActividad={categoriaActividad}
-        setCategoriaActividad={setCategoriaActividad}
-        fechaActividad={fechaActividad}
-        setFechaActividad={setFechaActividad}
-        agregarActividad={agregarActividad}
-      />
+          <FormActividad
+            nombreActividad={nombreActividad}
+            setNombreActividad={setNombreActividad}
+            categoriaActividad={categoriaActividad}
+            setCategoriaActividad={setCategoriaActividad}
+            fechaActividad={fechaActividad}
+            setFechaActividad={setFechaActividad}
+            agregarActividad={() => {
+              agregarActividad({
+                nombreActividad,
+                categoriaActividad,
+                fechaActividad
+              });
+
+              setNombreActividad("");
+              setFechaActividad(hoy);
+              setCategoriaActividad("Tarea");
+            }}
+          />
           <FormEstudiante
             nombreEstudiante={nombreEstudiante}
             setNombreEstudiante={setNombreEstudiante}

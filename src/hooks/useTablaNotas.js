@@ -1,7 +1,8 @@
 function useTablaNotas({
   estudiantes,
   setEstudiantes,
-  actividades
+  actividades,
+  setActividades
 }) {
   const agregarEstudiante = (
     nombreEstudiante
@@ -41,13 +42,48 @@ function useTablaNotas({
 
     setEstudiantes(nuevosEstudiantes);
   };
+// ============
+  // Agregar actividad 
+  // ===========
+
+  const agregarActividad = ({
+  nombreActividad,
+  categoriaActividad,
+  fechaActividad
+}) => {
+  if (!nombreActividad.trim()) return;
+
+  const nuevaActividad = {
+    id: Date.now(),
+    nombre: nombreActividad,
+    categoria: categoriaActividad,
+    fechaCreacion: fechaActividad
+  };
+
+  setActividades([
+    ...actividades,
+    nuevaActividad
+  ]);
+
+  const estudiantesActualizados =
+    estudiantes.map((est) => ({
+      ...est,
+      notas: {
+        ...est.notas,
+        [nuevaActividad.id]: ""
+      }
+    }));
+
+  setEstudiantes(estudiantesActualizados);
+};
 
   return {
     agregarEstudiante,
-    eliminarEstudiante
+    eliminarEstudiante,
+    agregarActividad
+      
   };
-    
-
+  
 }
 
 export default useTablaNotas;
