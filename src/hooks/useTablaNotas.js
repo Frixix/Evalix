@@ -147,6 +147,12 @@ function useTablaNotas({
       return est;
     });
 
+  tablaNotasService.actualizarNota({
+    estudianteId: id,
+    actividadId: actividad,
+    valor
+  });
+
     setEstudiantes(nuevosEstudiantes);
   };
 
