@@ -66,7 +66,9 @@ function useTablaNotas({
     categoria: categoriaActividad,
     fechaCreacion: fechaActividad
   };
-
+  tablaNotasService.crearActividad(
+    nuevaActividad
+  );
   setActividades([
     ...actividades,
     nuevaActividad
