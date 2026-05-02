@@ -6,6 +6,7 @@ import TablaNotasHeader from "./TablaNotasHeader";
 import TablaNotasRow from "./TablaNotasRow";
 import useTablaNotas from "../../hooks/useTablaNotas";
 import useFiltroEstudiantes from "../../hooks/useFiltroEstudiantes";
+import tablaNotasConfig from "../../config/tablaNotasConfig";
 
 
 import "../../styles/tabla.css";
@@ -51,8 +52,8 @@ function TablaNotas({
   });
 
   
-    // ================================
-  // filtrar estudiantes
+  // ================================
+  // HOOK DE FILTRADO DE ESTUDIANTES
   // ================================
   const estudiantesFiltrados =
   useFiltroEstudiantes(
@@ -131,12 +132,12 @@ function TablaNotas({
                     key={est.id}
                     est={est}
                     actividades={actividades}
-                    config={config}
+                    config={tablaNotasConfig}
                     promedio={promedio}
                     estado={estado}
                     eliminarEstudiante={eliminarEstudiante}
                     handleNotaChange={(...args) =>
-                      handleNotaChange(...args, config)
+                      handleNotaChange(...args, tablaNotasConfig)
                     }
                     actualizarEstado={actualizarEstado}
                   />

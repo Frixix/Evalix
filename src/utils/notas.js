@@ -1,3 +1,5 @@
+import { REGLAS_ACADEMICAS } from "../constants/reglasAcademicas";
+
 export const calcularPromedio = (
   notas,
   actividades = []
@@ -8,7 +10,12 @@ export const calcularPromedio = (
   actividades.forEach((act) => {
     const valor = notas?.[act.id];
 
-    if (valor === "" || valor === undefined) return;
+    if (
+      valor === "" ||
+      valor === undefined
+    ) {
+      return;
+    }
 
     if (valor === "NP") {
       totalNotasValidas++;
@@ -23,7 +30,9 @@ export const calcularPromedio = (
     }
   });
 
-  if (totalNotasValidas === 0) return 0;
+  if (totalNotasValidas === 0) {
+    return 0;
+  }
 
   return suma / totalNotasValidas;
 };
@@ -33,7 +42,7 @@ export const obtenerEstado = (
   notas
 ) => {
   const valores = Object.values(notas).filter(
-    (n) => n !== ""
+    (nota) => nota !== ""
   );
 
   if (valores.length === 0) {
@@ -43,14 +52,20 @@ export const obtenerEstado = (
     };
   }
 
-  if (promedio < 3) {
+  if (
+    promedio <
+    REGLAS_ACADEMICAS.notaMinimaAprobacion
+  ) {
     return {
       texto: "Pierde",
       clase: "estado-pierde"
     };
   }
 
-  if (promedio < 3.5) {
+  if (
+    promedio <
+    REGLAS_ACADEMICAS.notaRiesgo
+  ) {
     return {
       texto: "Riesgo",
       clase: "estado-riesgo"

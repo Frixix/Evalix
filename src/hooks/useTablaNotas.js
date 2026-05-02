@@ -1,3 +1,5 @@
+import { tablaNotasService } from "../services/tablaNotasService";
+
 function useTablaNotas({
   estudiantes,
   setEstudiantes,
@@ -24,6 +26,9 @@ function useTablaNotas({
       nombre: nombreEstudiante,
       notas: notasIniciales
     };
+    tablaNotasService.crearEstudiante(
+      nuevoEstudiante
+    );
 
     setEstudiantes([
       ...estudiantes,
