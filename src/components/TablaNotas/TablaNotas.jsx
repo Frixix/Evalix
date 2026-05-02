@@ -42,14 +42,6 @@ function TablaNotas({
   const [nombreEstudiante, setNombreEstudiante] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-    const eliminarEstudiante = (estudianteId) => {
-    const nuevosEstudiantes = estudiantes.filter(
-      (est) => est.id !== estudianteId
-    );
-
-      setEstudiantes(nuevosEstudiantes);
-    };
-
   // ================================
   // ACTUALIZAR NOTA
   // ================================
@@ -136,8 +128,10 @@ function TablaNotas({
   // USO DEL HOOK PERSONALIZADO Agregar estudiante
   // ================================
   
-  const { agregarEstudiante } =
-  useTablaNotas({
+  const {
+    agregarEstudiante,
+    eliminarEstudiante
+  } = useTablaNotas({
     estudiantes,
     setEstudiantes,
     actividades

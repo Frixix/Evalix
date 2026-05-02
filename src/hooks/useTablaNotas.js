@@ -26,9 +26,28 @@ function useTablaNotas({
     ]);
   };
 
-  return {
-    agregarEstudiante
+
+  // ============
+  // Eliminar estudiante 
+  // ===========
+
+  const eliminarEstudiante = (
+    estudianteId
+  ) => {
+    const nuevosEstudiantes =
+      estudiantes.filter(
+        (est) => est.id !== estudianteId
+      );
+
+    setEstudiantes(nuevosEstudiantes);
   };
+
+  return {
+    agregarEstudiante,
+    eliminarEstudiante
+  };
+    
+
 }
 
 export default useTablaNotas;
