@@ -14,18 +14,6 @@ import {
   obtenerEstado
 } from "../../utils/notas";
 
-// ================================
-// CONFIGURACIÓN GLOBAL
-// ================================
-const config = {
-  escala: {
-    min: 0,
-    max: 5,
-    step: 0.1
-  },
-  redondeo: 2
-};
-
 function TablaNotas({
     estudiantes,
     setEstudiantes,
