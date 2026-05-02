@@ -42,55 +42,7 @@ function TablaNotas({
   const [nombreEstudiante, setNombreEstudiante] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  // ================================
-  // ACTUALIZAR NOTA
-  // ================================
-  const actualizarEstado = (
-    id,
-    actividad,
-    valor
-  ) => {
-    const nuevosEstudiantes = estudiantes.map((est) => {
-      if (est.id === id) {
-        return {
-          ...est,
-          notas: {
-            ...est.notas,
-            [actividad]: valor
-          }
-        };
-      }
-
-      return est;
-    });
-
-    setEstudiantes(nuevosEstudiantes);
-  };
-
-  const handleNotaChange = (
-    id,
-    actividad,
-    valor
-  ) => {
-    if (valor === "") {
-      actualizarEstado(id, actividad, "");
-      return;
-    }
-
-    const numero = Number(valor);
-
-    if (isNaN(numero)) return;
-
-    if (
-      numero < config.escala.min ||
-      numero > config.escala.max
-    ) {
-      return;
-    }
-
-    actualizarEstado(id, actividad, numero);
-  };
-
+  
  // ================================
   // USO DEL HOOK PERSONALIZADO Agregar estudiante
   // ================================
@@ -98,7 +50,10 @@ function TablaNotas({
   const {
     agregarEstudiante,
     eliminarEstudiante,
-    agregarActividad
+    agregarActividad,
+    eliminarActividad,
+    actualizarEstado,
+    handleNotaChange
   } = useTablaNotas({
     estudiantes,
     setEstudiantes,
@@ -106,31 +61,7 @@ function TablaNotas({
     setActividades
   });
 
-  // ================================
-  // ELIMINAR ACTIVIDAD
-  // ================================
-  const eliminarActividad = (actividadId) => {
-  const nuevasActividades = actividades.filter(
-      (act) => act.id !== actividadId
-    );
-
-    setActividades(nuevasActividades);
-
-    const estudiantesActualizados = estudiantes.map((est) => {
-      const nuevasNotas = {
-        ...est.notas
-      };
-
-      delete nuevasNotas[actividadId];
-
-      return {
-        ...est,
-        notas: nuevasNotas
-      };
-    });
-
-    setEstudiantes(estudiantesActualizados);
-  };
+  
     // ================================
   // filtrar estudiantes
   // ================================
@@ -218,7 +149,9 @@ function TablaNotas({
                     promedio={promedio}
                     estado={estado}
                     eliminarEstudiante={eliminarEstudiante}
-                    handleNotaChange={handleNotaChange}
+                    handleNotaChange={(...args) =>
+                      handleNotaChange(...args, config)
+                    }
                     actualizarEstado={actualizarEstado}
                   />
                 );

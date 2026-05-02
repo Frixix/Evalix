@@ -4,6 +4,10 @@ function useTablaNotas({
   actividades,
   setActividades
 }) {
+
+  // ==================
+  // Agregar estudiante 
+  // ==================
   const agregarEstudiante = (
     nombreEstudiante
   ) => {
@@ -26,8 +30,6 @@ function useTablaNotas({
       nuevoEstudiante
     ]);
   };
-
-
   // ============
   // Eliminar estudiante 
   // ===========
@@ -42,7 +44,7 @@ function useTablaNotas({
 
     setEstudiantes(nuevosEstudiantes);
   };
-// ============
+  // ============
   // Agregar actividad 
   // ===========
 
@@ -107,13 +109,73 @@ function useTablaNotas({
     setEstudiantes(estudiantesActualizados);
   };
 
-    return {
-      agregarEstudiante,
-      eliminarEstudiante,
-      agregarActividad,
-      eliminarActividad
-    };
+
+  // ================================
+  // ACTUALIZAR ESTADO (NOTA)
+  // ================================
+  const actualizarEstado = (
+    id,
+    actividad,
+    valor
+  ) => {
+    const nuevosEstudiantes = estudiantes.map((est) => {
+      if (est.id === id) {
+        return {
+          ...est,
+          notas: {
+            ...est.notas,
+            [actividad]: valor
+          }
+        };
+      }
+
+      return est;
+    });
+
+    setEstudiantes(nuevosEstudiantes);
+  };
+
+  const handleNotaChange = (
+    id,
+    actividad,
+    valor,
+    config
+  ) => {
+    if (valor === "") {
+      actualizarEstado(id, actividad, "");
+      return;
+    }
+
+    const numero = Number(valor);
+
+    if (isNaN(numero)) return;
+
+    if (
+      numero < config.escala.min ||
+      numero > config.escala.max
+    ) {
+      return;
+    }
+
+    actualizarEstado(
+      id,
+      actividad,
+      numero
+    );
+  };
+
+
+  // =========
+
   
+  return {
+    agregarEstudiante,
+    eliminarEstudiante,
+    agregarActividad,
+    eliminarActividad,
+    actualizarEstado,
+    handleNotaChange
+  };
 }
 
 export default useTablaNotas;
