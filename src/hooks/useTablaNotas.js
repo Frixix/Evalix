@@ -10,7 +10,7 @@ function useTablaNotas({
   // ==================
   // Agregar estudiante 
   // ==================
-  const agregarEstudiante = (
+  const agregarEstudiante = async (
     nombreEstudiante
   ) => {
     if (!nombreEstudiante.trim()) return;
@@ -26,13 +26,20 @@ function useTablaNotas({
       nombre: nombreEstudiante,
       notas: notasIniciales
     };
-    tablaNotasService.crearEstudiante(
-      nuevoEstudiante
-    );
+    const estudianteGuardado =
+      await tablaNotasService.crearEstudiante(
+        nuevoEstudiante
+      );
+
+    if (!estudianteGuardado) return;
 
     setEstudiantes([
       ...estudiantes,
-      nuevoEstudiante
+      {
+        id: estudianteGuardado.id,
+        nombre: estudianteGuardado.nombre,
+        notas: notasIniciales
+      }
     ]);
   };
   // ============

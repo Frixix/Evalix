@@ -60,6 +60,9 @@ function TablaNotas({
     estudiantes,
     busqueda
   );
+  console.log(estudiantes);
+
+
   return (
     <div className="tabla-container">
       <h2 className="tabla-titulo">

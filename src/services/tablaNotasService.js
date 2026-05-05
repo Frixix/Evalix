@@ -1,3 +1,5 @@
+import { supabase } from "../lib/supabase";
+
 export const tablaNotasService = {
   obtenerDatos() {
     return {
@@ -6,11 +8,30 @@ export const tablaNotasService = {
     };
   },
 
-  crearEstudiante(estudiante) {
+  async crearEstudiante(estudiante) {
+    const { data, error } = await supabase
+      .from("estudiantes")
+      .insert([
+        {
+          nombre: estudiante.nombre
+        }
+      ])
+      .select();
+
+    if (error) {
+      console.error(
+        "Error creando estudiante:",
+        error
+      );
+      return null;
+    }
+
     console.log(
-      "Mock crear estudiante:",
-      estudiante
+      "Estudiante guardado:",
+      data
     );
+
+    return data[0];
   },
 
   crearActividad(actividad) {
