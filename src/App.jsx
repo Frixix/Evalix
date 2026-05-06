@@ -2,36 +2,17 @@ import { useState } from "react";
 import TablaNotas from "./components/TablaNotas/TablaNotas";
 import ImportarCSV from "./components/ImportarCSV";
 import Header from "./components/Header";
-import { estudiantesMock } from "./data/estudiantes";
-import { usePersistenciaNotas } from "./hooks/usePersistenciaNotas";
+// import { estudiantesMock } from "./data/estudiantes";
+// import { usePersistenciaNotas } from "./hooks/usePersistenciaNotas";
 
 function App() {
   const [vista, setVista] = useState("tabla");
 
-  const [actividades, setActividades] = useState([
-    {
-      id: 1,
-      nombre: "Actividad 1",
-      categoria: "Tarea",
-      fechaCreacion: new Date().toISOString().split("T")[0]
-    },
-    {
-      id: 2,
-      nombre: "Actividad 2",
-      categoria: "Tarea",
-      fechaCreacion: new Date().toISOString().split("T")[0]
-    }
-  ]);
+    const [actividades, setActividades] =
+      useState([]);
 
-  const [estudiantes, setEstudiantes] =
-    useState(estudiantesMock);
-
-  usePersistenciaNotas({
-    estudiantes,
-    actividades,
-    setEstudiantes,
-    setActividades
-  });
+    const [estudiantes, setEstudiantes] =
+      useState([]);
 
   return (
     <>

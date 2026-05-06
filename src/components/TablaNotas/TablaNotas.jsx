@@ -60,7 +60,6 @@ function TablaNotas({
     estudiantes,
     busqueda
   );
-  console.log(estudiantes);
 
 
   return (
