@@ -166,11 +166,18 @@ src/
 │   │   └── FiltrosTabla.jsx
 │
 ├── hooks/
-│   ├── usePersistenciaNotas.js
-│   └── useTablaNotas.js        ← NUEVO
+│   └── useTablaNotas.js
 │
 ├── services/
-│   └── notasService.js         ← FUTURO SUPABASE
+│   └── tablaNotasService.js
+│
+├── lib/
+│   └── supabase.js
+│
+├── constants/
+│   └── reglasAcademicas.js
 │
 ├── utils/
 │   └── notas.js
+│
+└── App.jsx
