@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase"; // ajusta la ruta según tu caso
+import { supabase } from "../lib/supabase"; 
 
 export const tablaNotasService = {
   // ========================
