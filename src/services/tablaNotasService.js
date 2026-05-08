@@ -1,30 +1,47 @@
-import { supabase } from "../lib/supabase"; 
+import { supabase } from "../supabaseClient";
 
 export const tablaNotasService = {
-  // ========================
+  // =========================
   // OBTENER DATOS
-  // ========================
+  // =========================
   async obtenerDatos() {
-    const { data: estudiantes, error: errorEst } =
-      await supabase
-        .from("estudiantes")
-        .select("*");
+    const {
+      data: estudiantes,
+      error: errorEstudiantes
+    } = await supabase
+      .from("estudiantes")
+      .select("*");
 
-    const { data: actividades, error: errorAct } =
-      await supabase
-        .from("actividades")
-        .select("*");
+    const {
+      data: actividades,
+      error: errorActividades
+    } = await supabase
+      .from("actividades")
+      .select("*");
 
-    if (errorEst || errorAct) {
+    if (
+      errorEstudiantes ||
+      errorActividades
+    ) {
       console.error(
         "Error cargando datos:",
-        errorEst || errorAct
+        errorEstudiantes ||
+          errorActividades
       );
+
       return {
         estudiantes: [],
         actividades: []
       };
     }
+
+    console.log(
+      "Datos cargados:",
+      {
+        estudiantes,
+        actividades
+      }
+    );
 
     return {
       estudiantes,
@@ -32,18 +49,20 @@ export const tablaNotasService = {
     };
   },
 
-  // ========================
+  // =========================
   // CREAR ESTUDIANTE
-  // ========================
+  // =========================
   async crearEstudiante(estudiante) {
-    const { data, error } = await supabase
-      .from("estudiantes")
-      .insert([
-        {
-          nombre: estudiante.nombre
-        }
-      ])
-      .select();
+    const { data, error } =
+      await supabase
+        .from("estudiantes")
+        .insert([
+          {
+            nombre: estudiante.nombre,
+            notas: estudiante.notas
+          }
+        ])
+        .select();
 
     if (error) {
       console.error(
@@ -53,47 +72,104 @@ export const tablaNotasService = {
       return null;
     }
 
-    console.log("Estudiante guardado:", data);
+    console.log(
+      "Estudiante guardado:",
+      data
+    );
 
     return data[0];
   },
 
-  // ========================
-  // CREAR ACTIVIDAD (aún mock)
-  // ========================
-  crearActividad(actividad) {
+  // =========================
+  // CREAR ACTIVIDAD
+  // =========================
+  async crearActividad(actividad) {
+    const { data, error } =
+      await supabase
+        .from("actividades")
+        .insert([
+          {
+            nombre: actividad.nombre,
+            categoria:
+              actividad.categoria,
+            fechaCreacion:
+              actividad.fechaCreacion
+          }
+        ])
+        .select();
+
+    if (error) {
+      console.error(
+        "Error creando actividad:",
+        error
+      );
+      return null;
+    }
+
     console.log(
-      "Mock crear actividad:",
-      actividad
+      "Actividad guardada:",
+      data
     );
+
+    return data[0];
   },
 
-  // ========================
-  // ACTUALIZAR NOTA (mock)
-  // ========================
-  actualizarNota(data) {
+  // =========================
+  // ACTUALIZAR NOTA
+  // =========================
+  async actualizarNota(data) {
     console.log(
       "Mock actualizar nota:",
       data
     );
   },
 
-  // ========================
-  // ELIMINAR ESTUDIANTE (mock)
-  // ========================
-  eliminarEstudiante(id) {
+  // =========================
+  // ELIMINAR ESTUDIANTE
+  // =========================
+  async eliminarEstudiante(id) {
+    const { error } =
+      await supabase
+        .from("estudiantes")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+      console.error(
+        "Error eliminando estudiante:",
+        error
+      );
+
+      return;
+    }
+
     console.log(
-      "Mock eliminar estudiante:",
+      "Estudiante eliminado:",
       id
     );
   },
 
-  // ========================
-  // ELIMINAR ACTIVIDAD (mock)
-  // ========================
-  eliminarActividad(id) {
+  // =========================
+  // ELIMINAR ACTIVIDAD
+  // =========================
+  async eliminarActividad(id) {
+    const { error } =
+      await supabase
+        .from("actividades")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+      console.error(
+        "Error eliminando actividad:",
+        error
+      );
+
+      return;
+    }
+
     console.log(
-      "Mock eliminar actividad:",
+      "Actividad eliminada:",
       id
     );
   }

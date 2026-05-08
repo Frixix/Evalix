@@ -22,7 +22,6 @@ function useTablaNotas({
     });
 
     const nuevoEstudiante = {
-      id: Date.now(),
       nombre: nombreEstudiante,
       notas: notasIniciales
     };
@@ -35,23 +34,19 @@ function useTablaNotas({
 
     setEstudiantes([
       ...estudiantes,
-      {
-        id: estudianteGuardado.id,
-        nombre: estudianteGuardado.nombre,
-        notas: notasIniciales
-      }
+      estudianteGuardado
     ]);
-  };
+    };
   // ============
   // Eliminar estudiante 
   // ===========
 
-  const eliminarEstudiante = (
+  const eliminarEstudiante = async (
     estudianteId
   ) => {
-    tablaNotasService.eliminarEstudiante(
-      estudianteId
-    );
+  await tablaNotasService.eliminarEstudiante(
+    estudianteId
+  );
 
     const nuevosEstudiantes =
       estudiantes.filter(
