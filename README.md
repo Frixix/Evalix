@@ -1,144 +1,276 @@
 # Evalix
 
-Aplicación web para gestión académica y control de notas de estudiantes.
+Sistema de gestión de notas académicas construido con React y Supabase.
 
 ---
 
-## Descripción
+# Link 
+https://evalix-iota.vercel.app/
+---
 
-Evalix permite administrar estudiantes, actividades y calificaciones dentro de una tabla dinámica de notas, con persistencia en proceso de migración hacia backend con Supabase.
+# Estado actual del proyecto
 
-Su objetivo es evolucionar hacia una plataforma SaaS para instituciones educativas y docentes independientes.
+El proyecto ya cuenta con:
+
+* Gestión de estudiantes
+* Gestión de actividades
+* Registro de notas
+* Persistencia local
+* Integración inicial con Supabase
+* Arquitectura modular con hooks y services
 
 ---
 
-## Funcionalidades Actuales
+# Tecnologías utilizadas
 
-### Gestión de Estudiantes
-
-* Agregar estudiantes manualmente
-* Eliminar estudiantes
-* Buscar estudiantes por nombre
-
-### Gestión de Actividades
-
-* Crear actividades académicas
-* Categorizar actividades:
-
-  * Tarea
-  * Quiz
-  * Examen
-  * Proyecto
-  * Laboratorio
-* Asignar fecha de creación
-* Eliminar actividades
-
-### Calificaciones
-
-* Registrar notas entre 0.0 y 5.0
-* Marcar actividad como NP (No presentó)
-* Cálculo automático de promedio
-* Estado académico automático:
-
-  * Aprueba
-  * Riesgo
-  * Pierde
-
-### Importación de Datos
-
-* Importación CSV de estudiantes
-* Validación de encabezados
-* Prevención de duplicados
-
-### Persistencia
-
-* Arquitectura preparada para persistencia backend
-* Integración inicial con Supabase en progreso
-
----
-
-## Stack Tecnológico
+## Frontend
 
 * React
-* JavaScript
 * Vite
-* CSS Modular
-* Supabase (Backend en integración)
+* JavaScript
+* CSS
+
+## Backend / Base de datos
+
+* Supabase
+* PostgreSQL
 
 ---
 
-## Arquitectura del Proyecto
+# Arquitectura actual
 
-```bash id="g7zz9e"
+```txt
 src/
 │
 ├── components/
-│   ├── Header.jsx
-│   ├── ImportarCSV.jsx
-│   └── TablaNotas/
-│       ├── TablaNotas.jsx
-│       ├── TablaNotasHeader.jsx
-│       ├── TablaNotasRow.jsx
-│       ├── FormActividad.jsx
-│       ├── FormEstudiante.jsx
-│       └── FiltrosTabla.jsx
-│
 ├── hooks/
-│   ├── useTablaNotas.js
-│   └── useFiltroEstudiantes.js
-│
 ├── services/
-│   └── tablaNotasService.js
-│
-├── lib/
-│   └── supabase.js
-│
-├── constants/
-│   └── reglasAcademicas.js
-│
 ├── utils/
-│   └── notas.js
-│
-└── App.jsx
+├── constants/
+├── styles/
+└── data/
 ```
 
 ---
 
-## Estado Actual del Proyecto
+# Hooks personalizados
 
-Evalix se encuentra en transición desde una arquitectura local hacia una arquitectura fullstack basada en Supabase.
+## useTablaNotas
+
+Encapsula toda la lógica principal:
+
+* agregar estudiantes
+* eliminar estudiantes
+* agregar actividades
+* eliminar actividades
+* actualizar notas
+
+## useFiltroEstudiantes
+
+Encapsula la lógica de filtrado y búsqueda.
+
+## usePersistenciaNotas
+
+Persistencia local usando localStorage.
+
+---
+
+# Services
+
+## tablaNotasService
+
+Capa encargada de comunicarse con Supabase.
+
+Actualmente implementa:
+
+* obtenerDatos()
+* crearEstudiante()
+* crearActividad()
+* eliminarEstudiante()
+* eliminarActividad()
+
+---
+
+# Integración con Supabase
+
+## Tablas creadas
+
+### estudiantes
+
+```sql
+id bigint primary key
+nombre text
+notas jsonb
+created_at timestamp
+```
+
+### actividades
+
+```sql
+id bigint primary key
+nombre text
+categoria text
+fecha_creacion date
+created_at timestamp
+```
+
+### notas
+
+```sql
+id bigint primary key
+estudiante_id bigint
+actividad_id bigint
+valor text
+created_at timestamp
+```
+
+---
+
+# Flujo actual
+
+## React
+
+React mantiene el estado principal.
+
+## Supabase
+
+Supabase almacena:
+
+* estudiantes
+* actividades
+
+Actualmente las notas siguen guardándose dentro del estudiante usando JSONB.
+
+---
+
+# Problemas solucionados
+
+## IDs duplicados
+
+Antes:
+
+* Date.now()
+* conflictos de React keys
+
+Ahora:
+
+* IDs generados por Supabase
+
+---
+
+## Persistencia real
+
+Antes:
+
+* mock
+* localStorage
+
+Ahora:
+
+* base de datos real
+
+---
+
+## Sincronización
+
+Ahora:
+
+* crear estudiante sincroniza con Supabase
+* eliminar estudiante sincroniza con Supabase
+* crear actividad sincroniza con Supabase
+* eliminar actividad sincroniza con Supabase
+
+---
+
+# Próximos pasos
+
+## Prioridad alta
+
+### 1. Guardar actividades correctamente
 
 Actualmente:
 
-* CRUD conectado a capa de servicios mock
-* Base de datos Supabase configurada
-* Variables de entorno listas
-* Preparado para migración completa de persistencia
+* React usa camelCase
+* DB usa snake_case
+
+Debe normalizarse.
 
 ---
 
-## Roadmap Próximo
+### 2. Guardar notas reales
 
-* Integrar lectura inicial desde Supabase
-* Reemplazar mocks por queries reales
-* Implementar autenticación docente
-* Añadir aislamiento de datos por usuario
-* Preparar lanzamiento beta
+Actualmente:
+
+* notas se guardan en JSONB
+
+Futuro:
+
+* usar tabla relacional notas
+
+---
+
+### 3. Importación CSV real
+
+Actualmente:
+
+* solo actualiza React
+
+Debe:
+
+* guardar también en Supabase
 
 ---
 
-## Visión a Futuro
+### 4. Actualización real de notas
 
-Convertir Evalix en una plataforma SaaS educativa con:
+Actualmente:
 
-* Gestión multi-docente
-* Panel administrativo
-* Vista para estudiantes
-* Analítica avanzada
-* Exportación de reportes
-* Integración institucional
+* mock
+
+Debe:
+
+* persistir en Supabase
 
 ---
+
+# Mejoras futuras
+
+* autenticación
+* usuarios
+* materias
+* grupos
+* profesores
+* dashboards
+* analytics
+* exportación PDF
+* gráficos
+* reportes
+* permisos y roles
+
+---
+
+# Objetivo arquitectónico
+
+Construir una aplicación académica real:
+
+Frontend:
+
+* React
+
+Backend:
+
+* Supabase
+
+Base de datos:
+
+* PostgreSQL
+
+Arquitectura:
+
+* escalable
+* modular
+* mantenible
+* preparada para producción
 
 ## Autor
 
