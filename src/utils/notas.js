@@ -39,7 +39,7 @@ export const calcularPromedio = (
 
 export const obtenerEstado = (
   promedio,
-  notas
+  notas = {}
 ) => {
   const valores = Object.values(notas).filter(
     (nota) => nota !== ""
